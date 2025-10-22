@@ -1,6 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import request_validation_exception_handler
 import requests
 import random
 import time
@@ -10,15 +12,85 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 BASE_URL = "https://api.mail.tm"
 
 @app.get("/")
 async def read_root():
     return FileResponse("index.html")
 
-@app.get("/favicon.ico")
-async def get_favicon():
-    return FileResponse("favicon.ico")
+@app.get("/privacy")
+async def privacy():
+    return FileResponse("privacy.html")
+
+@app.get("/terms")
+async def terms():
+    return FileResponse("terms.html")
+
+@app.get("/contact")
+async def contact():
+    return FileResponse("contact.html")
+
+@app.get("/robots.txt")
+async def robots():
+    return FileResponse("robots.txt", media_type="text/plain")
+
+@app.get("/sitemap.xml")
+async def sitemap():
+    return FileResponse("sitemap.xml", media_type="application/xml")
+
+@app.get("/manifest.json")
+async def manifest():
+    return FileResponse("manifest.json", media_type="application/json")
+
+@app.get("/sw.js")
+async def service_worker():
+    return FileResponse("sw.js", media_type="application/javascript")
+
+@app.get("/tempmail.png")
+async def tempmail_logo():
+    return FileResponse("tempmail.png", media_type="image/png")
+
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc):
+    return HTMLResponse(
+        content="""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | TempMail</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { text-align: center; max-width: 500px; padding: 2rem; }
+        h1 { font-size: 6rem; margin-bottom: 1rem; opacity: 0.8; }
+        h2 { font-size: 2rem; margin-bottom: 1rem; }
+        p { font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9; }
+        .btn { display: inline-block; padding: 12px 24px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s ease; }
+        .btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>The page you're looking for doesn't exist or has been moved.</p>
+        <a href="/" class="btn">← Back to TempMail</a>
+    </div>
+</body>
+</html>
+        """,
+        status_code=404
+    )
 
 # ... rest of the code ...
 

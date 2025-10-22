@@ -3,7 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Create secure, anonymous temporary email addresses instantly. Protect your privacy with disposable emails that self-destruct. Fast, free, and no registration required." />
+    <meta name="keywords" content="temporary email, disposable email, temp mail, anonymous email, privacy, spam protection, burner email, fake email" />
+    <meta name="author" content="Saksham Goel" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="theme-color" content="#6366f1" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pro-tempmail.onrender.com/" />
+    <meta property="og:title" content="TempMail - Professional Temporary Email Service" />
+    <meta property="og:description" content="Create secure, anonymous temporary email addresses instantly. Protect your privacy with disposable emails that self-destruct." />
+    <meta property="og:image" content="https://pro-tempmail.onrender.com/tempmail.png" />
+    <meta property="og:site_name" content="TempMail Pro" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://pro-tempmail.onrender.com/" />
+    <meta property="twitter:title" content="TempMail - Professional Temporary Email Service" />
+    <meta property="twitter:description" content="Create secure, anonymous temporary email addresses instantly. Protect your privacy with disposable emails that self-destruct." />
+    <meta property="twitter:image" content="https://pro-tempmail.onrender.com/tempmail.png" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TempMail Pro">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#6366f1">
+
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="tempmail.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="tempmail.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="tempmail.png" />
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" as="script" />
+
+    <!-- DNS prefetch -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="//api.mail.tm" />
+
     <title>TempMail - Professional Temporary Email Service</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
@@ -11,6 +57,35 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TempMail Pro",
+      "description": "Professional temporary email service for privacy protection",
+      "url": "https://pro-tempmail.onrender.com",
+      "applicationCategory": "CommunicationApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "TempMail Pro"
+      },
+      "featureList": [
+        "Instant email creation",
+        "Anonymous and secure",
+        "No registration required",
+        "Real-time message delivery",
+        "Mobile responsive"
+      ]
+    }
+    </script>
     <style>
       * {
         box-sizing: border-box;
@@ -94,7 +169,7 @@
             rgba(236, 72, 153, 0.2) 0%,
             transparent 50%
           );
-        z-index: -1;
+        z-index: -2;
         animation: gradientShift 15s ease infinite;
       }
 
@@ -157,17 +232,457 @@
         gap: 10px;
       }
 
+      .nav-menu {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+
+      .nav-list {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 32px;
+      }
+
+      .nav-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 15px;
+        transition: color 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus {
+        color: var(--primary);
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after,
+      .nav-link:focus::after {
+        width: 100%;
+      }
+
       .header-right {
         display: flex;
         gap: 12px;
         align-items: center;
       }
 
-      /* Container */
-      .container {
+      /* Features Section */
+      .features-section {
+        background: transparent;
+        padding: 80px 0;
+        border-top: 1px solid rgba(0,0,0,0.04);
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        position: relative;
+        z-index: 0;
+      }
+
+      [data-theme="dark"] .features-section {
+        background: transparent;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .section-header h2 {
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .section-header p {
+        font-size: 18px;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 32px;
+      }
+
+      .feature-card {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 10px 40px var(--shadow-lg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--border);
+      }
+
+      [data-theme="dark"] .feature-card {
+        background: var(--dark);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 60px var(--shadow-lg);
+      }
+
+      .feature-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+      }
+
+      .feature-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 16px;
+      }
+
+      .feature-card p {
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* Contact Section */
+      .contact-section {
+        background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+        color: white;
+        padding: 80px 0;
+      }
+
+      .contact-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: start;
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .contact-icon {
+        font-size: 32px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+      }
+
+      .contact-item h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .contact-item p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+      }
+
+      .contact-item a {
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .contact-item a:hover {
+        opacity: 0.8;
+      }
+
+      .contact-form {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: white;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 15px;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: white;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--dark);
+        color: white;
+        padding: 60px 0 20px;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-logo {
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 16px;
+      }
+
+      .footer p {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 12px;
+      }
+
+      .social-icon {
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: background 0.3s ease;
+      }
+
+      .social-links a:hover .social-icon {
+        background: var(--primary);
+      }
+
+      .footer-section h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: white;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-links li {
+        margin-bottom: 8px;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+        text-align: center;
+      }
+
+      .footer-bottom p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        margin: 0;
+      }
+
+      /* Back to Top Button */
+      .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      }
+
+      .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .back-to-top:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
+      }
+
+      /* Cookie Consent */
+      .cookie-consent {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--dark);
+        color: white;
+        padding: 20px;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .cookie-consent.show {
+        transform: translateY(0);
+      }
+
+      .cookie-content {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 32px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .cookie-text {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .cookie-buttons {
+        display: flex;
+        gap: 12px;
+      }
+
+      .cookie-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cookie-btn-accept {
+        background: var(--primary);
+        color: white;
+      }
+
+      .cookie-btn-accept:hover {
+        background: var(--primary-dark);
+      }
+
+      .cookie-btn-decline {
+        background: transparent;
+        color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .cookie-btn-decline:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Accessibility */
+      .keyboard-navigation *:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      /* Focus indicators */
+      button:focus,
+      a:focus,
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      /* Skip link for screen readers */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: var(--primary);
+        color: white;
+        padding: 8px;
+        text-decoration: none;
+        z-index: 1000;
+        border-radius: 4px;
+      }
+
+      .skip-link:focus {
+        top: 6px;
       }
 
       /* Email Card */
@@ -1348,6 +1863,74 @@
         }
       }
 
+      /* Navigation responsive */
+      @media (max-width: 768px) {
+        .nav-menu {
+          display: none;
+        }
+
+        .header {
+          justify-content: space-between;
+        }
+      }
+
+      /* Features responsive */
+      @media (max-width: 768px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
+        .feature-card {
+          padding: 24px;
+        }
+
+        .feature-icon {
+          font-size: 36px;
+        }
+      }
+
+      /* Contact responsive */
+      @media (max-width: 768px) {
+        .contact-content {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+
+        .contact-form {
+          padding: 24px;
+        }
+      }
+
+      /* Footer responsive */
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+
+        .footer-section {
+          text-align: center;
+        }
+
+        .social-links {
+          justify-content: center;
+        }
+      }
+
+      /* Cookie consent responsive */
+      @media (max-width: 768px) {
+        .cookie-content {
+          flex-direction: column;
+          text-align: center;
+          gap: 16px;
+        }
+
+        .cookie-buttons {
+          justify-content: center;
+        }
+      }
+
       /* Info Sections */
       .info-section {
         margin: 40px 0;
@@ -1409,16 +1992,25 @@
     </style>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="header">
       <div class="logo">TEMPMAIL PRO</div>
+      <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="#home" class="nav-link" aria-label="Go to home section">Home</a></li>
+          <li><a href="#features" class="nav-link" aria-label="Go to features section">Features</a></li>
+          <li><a href="#about" class="nav-link" aria-label="Go to about section">About</a></li>
+          <li><a href="#contact" class="nav-link" aria-label="Go to contact section">Contact</a></li>
+        </ul>
+      </nav>
       <div class="header-right">
-        <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
+        <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle between light and dark theme">
           🌙
         </button>
       </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="home" role="main" id="main-content">
       <div id="error" class="error" style="display: none">
         <span>⚠️</span>
         <span id="error-text"></span>
@@ -1558,8 +2150,50 @@
       </div>
     </div>
 
+    <!-- Features Section -->
+    <div class="features-section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <h2>Why Choose TempMail Pro?</h2>
+          <p>Experience the most advanced temporary email service with cutting-edge features</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3>Instant Creation</h3>
+            <p>Generate unique, professional email addresses in seconds with no registration required.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Privacy First</h3>
+            <p>Complete anonymity with no data storage. Your privacy is our top priority.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>Mobile Ready</h3>
+            <p>Responsive design that works perfectly on all devices and screen sizes.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Real-time Updates</h3>
+            <p>Receive emails instantly with automatic refresh and push notifications.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>Secure & Safe</h3>
+            <p>SSL encryption, DOMPurify sanitization, and advanced security measures.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>Modern UI</h3>
+            <p>Beautiful, intuitive interface with dark/light theme support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- What is Disposable Temporary E-mail Section -->
-    <div class="info-section">
+    <div class="info-section" id="about">
       <div class="info-card">
         <h2>What is Disposable Temporary E-mail?</h2>
         <p>
@@ -1758,6 +2392,105 @@
       </div>
     </div>
 
+    <!-- Contact Section -->
+    <div class="contact-section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <h2>Get In Touch</h2>
+          <p>Have questions or feedback? We'd love to hear from you!</p>
+        </div>
+        <div class="contact-content">
+          <div class="contact-info">
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <div>
+                <h3>Email</h3>
+                <p><a href="mailto:sakshamgoel1107@gmail.com">sakshamgoel1107@gmail.com</a></p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">🐛</div>
+              <div>
+                <h3>Report Issues</h3>
+                <p><a href="https://github.com/Saksham-Goel1107/TempMail/issues" target="_blank" rel="noopener">GitHub Issues</a></p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">⭐</div>
+              <div>
+                <h3>Contribute</h3>
+                <p><a href="https://github.com/Saksham-Goel1107/TempMail" target="_blank" rel="noopener">GitHub Repository</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-form">
+            <form id="contact-form" class="contact-form-element">
+              <div class="form-group">
+                <label for="contact-name">Name</label>
+                <input type="text" id="contact-name" name="name" required aria-required="true">
+              </div>
+              <div class="form-group">
+                <label for="contact-email">Email</label>
+                <input type="email" id="contact-email" name="email" required aria-required="true">
+              </div>
+              <div class="form-group">
+                <label for="contact-message">Message</label>
+                <textarea id="contact-message" name="message" rows="5" required aria-required="true"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo">TEMPMAIL PRO</div>
+            <p>Professional temporary email service for privacy protection. Create anonymous emails instantly with no registration required.</p>
+            <div class="social-links">
+              <a href="https://github.com/Saksham-Goel1107/TempMail" target="_blank" rel="noopener" aria-label="Visit our GitHub repository">
+                <span class="social-icon">🐙</span>
+              </a>
+              <a href="mailto:sakshamgoel1107@gmail.com?subject=TempMail Pro&body=Dear TempMail Pro Team," target="_blank" aria-label="Share via email">
+                <span class="social-icon">📧</span>
+              </a>
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul class="footer-links">
+              <li><a href="#home">Home</a></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Legal</h4>
+            <ul class="footer-links">
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/contact">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Resources</h4>
+            <ul class="footer-links">
+              <li><a href="https://github.com/Saksham-Goel1107/TempMail" target="_blank" rel="noopener">GitHub</a></li>
+              <li><a href="https://github.com/Saksham-Goel1107/TempMail/issues" target="_blank" rel="noopener">Report Issues</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 TempMail Pro. All rights reserved. | Made with ❤️ for privacy</p>
+        </div>
+      </div>
+    </footer>
+
     <!-- QR Code Modal -->
     <div class="modal" id="qr-modal">
       <div class="modal-content">
@@ -1816,6 +2549,24 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+    <!-- Cookie Consent -->
+    <div class="cookie-consent" id="cookie-consent">
+      <div class="cookie-content">
+        <div class="cookie-text">
+          <strong>🍪 Cookie Notice</strong><br>
+          We use cookies to enhance your experience. By continuing to use our site, you agree to our use of cookies.
+          <a href="/privacy" style="color: var(--primary);">Learn more</a>
+        </div>
+        <div class="cookie-buttons">
+          <button class="cookie-btn cookie-btn-accept" id="accept-cookies">Accept</button>
+          <button class="cookie-btn cookie-btn-decline" id="decline-cookies">Decline</button>
+        </div>
+      </div>
+    </div>
 
     <script>
       let token = null;
@@ -2529,7 +3280,161 @@
       // Auto-create email on page load
       window.addEventListener("load", () => {
         createAccount();
+        initNavigation();
+        initBackToTop();
+        initCookieConsent();
+        initContactForm();
       });
+
+      // Navigation functionality
+      function initNavigation() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+              const headerHeight = document.querySelector('.header').offsetHeight;
+              const targetPosition = targetElement.offsetTop - headerHeight - 20;
+              
+              window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+              });
+            }
+          });
+        });
+      }
+
+      // Back to top functionality
+      function initBackToTop() {
+        const backToTopBtn = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+          if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('show');
+          } else {
+            backToTopBtn.classList.remove('show');
+          }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      // Cookie consent functionality
+      function initCookieConsent() {
+        const cookieConsent = document.getElementById('cookie-consent');
+        const acceptBtn = document.getElementById('accept-cookies');
+        const declineBtn = document.getElementById('decline-cookies');
+        
+        // Check if user has already made a choice
+        const cookieChoice = localStorage.getItem('cookie-consent');
+        if (!cookieChoice) {
+          // Show cookie consent after a delay
+          setTimeout(() => {
+            cookieConsent.classList.add('show');
+          }, 2000);
+        }
+        
+        acceptBtn.addEventListener('click', () => {
+          localStorage.setItem('cookie-consent', 'accepted');
+          cookieConsent.classList.remove('show');
+          showToast('🍪 Cookies accepted', 'success');
+          
+          // Initialize analytics if accepted
+          initAnalytics();
+        });
+        
+        declineBtn.addEventListener('click', () => {
+          localStorage.setItem('cookie-consent', 'declined');
+          cookieConsent.classList.remove('show');
+          showToast('🍪 Cookies declined', 'info');
+        });
+      }
+
+      // Contact form functionality
+      function initContactForm() {
+        const contactForm = document.getElementById('contact-form');
+        
+        contactForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          const formData = new FormData(contactForm);
+          const name = formData.get('name');
+          const email = formData.get('email');
+          const message = formData.get('message');
+          
+          // For demo purposes, just show a success message
+          // In a real application, you would send this data to a server
+          showToast('📧 Message sent successfully!', 'success');
+          contactForm.reset();
+          
+          // Track contact form submission
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'contact_form_submit', {
+              event_category: 'engagement',
+              event_label: 'contact_form'
+            });
+          }
+        });
+      }
+
+      // Analytics initialization (placeholder)
+      function initAnalytics() {
+        // Google Analytics placeholder
+        // Replace with your actual GA tracking ID
+        if (localStorage.getItem('cookie-consent') === 'accepted') {
+          // Load Google Analytics script
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID';
+          document.head.appendChild(script);
+
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'GA_TRACKING_ID');
+
+          // Track page view
+          gtag('event', 'page_view', {
+            page_title: document.title,
+            page_location: window.location.href
+          });
+        }
+      }
+
+      // Accessibility improvements
+      function initAccessibility() {
+        // Add focus indicators
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            document.body.classList.add('keyboard-navigation');
+          }
+        });
+        
+        document.addEventListener('mousedown', () => {
+          document.body.classList.remove('keyboard-navigation');
+        });
+        
+        // Add ARIA labels where needed
+        const buttons = document.querySelectorAll('button:not([aria-label])');
+        buttons.forEach(btn => {
+          if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
+            btn.setAttribute('aria-label', 'Button');
+          }
+        });
+      }
+
+      // Initialize accessibility features
+      initAccessibility();
     </script>
   </body>
 </html>
