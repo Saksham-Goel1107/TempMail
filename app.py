@@ -10,19 +10,15 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 BASE_URL = "https://api.mail.tm"
 
 @app.get("/")
 async def read_root():
     return FileResponse("index.html")
+
+@app.get("/favicon.ico")
+async def get_favicon():
+    return FileResponse("favicon.ico")
 
 # ... rest of the code ...
 
@@ -44,6 +40,7 @@ def get_token(email, password):
     response.raise_for_status()
     return response.json()["token"]
 
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 def get_messages(token):
     headers = {"Authorization": f"Bearer {token}"}
@@ -76,11 +73,31 @@ def generate_unique_username():
     adjectives = ['cool', 'smart', 'swift', 'bright', 'clear', 'prime', 'elite', 'bold', 
                   'pure', 'safe', 'true', 'vast', 'wise', 'zen', 'pro', 'ace', 'alpha',
                   'beta', 'delta', 'echo', 'nova', 'sigma', 'omega', 'cyber', 'digital',
-                  'secure', 'private', 'stealth', 'ghost', 'shadow', 'silent', 'quick']
+                  'secure', 'private', 'stealth', 'ghost', 'shadow', 'silent', 'quick',
+                  'agile', 'awesome', 'blazing', 'clever', 'dynamic', 'epic', 'fierce',
+                  'genius', 'heroic', 'infinite', 'legendary', 'mighty', 'noble', 'radiant',
+                  'savage', 'stellar', 'supreme', 'thunder', 'ultimate', 'vibrant', 'wild',
+                  'zealous', 'brave', 'calm', 'daring', 'eager', 'fancy', 'glorious', 'happy',
+                  'ideal', 'jolly', 'keen', 'lucky', 'magic', 'neat', 'optimistic', 'proud',
+                  'quiet', 'rare', 'sharp', 'tough', 'unique', 'vivid', 'witty', 'xtra',
+                  'youthful', 'zany', 'adventurous', 'bold', 'charming', 'dazzling', 'elegant',
+                  'fabulous', 'graceful', 'harmonious', 'innovative', 'joyful', 'kind', 'lively',
+                  'majestic', 'natural', 'original', 'peaceful', 'quirky', 'resilient', 'sincere',
+                  'talented', 'united', 'valiant', 'wise', 'xenon', 'yielding', 'zesty']
     
     nouns = ['user', 'mail', 'inbox', 'box', 'post', 'msg', 'send', 'recv', 'net',
              'web', 'link', 'node', 'hub', 'core', 'base', 'zone', 'spot', 'site',
-             'temp', 'anon', 'secure', 'vault', 'shield', 'guard', 'lock', 'key']
+             'temp', 'anon', 'secure', 'vault', 'shield', 'guard', 'lock', 'key',
+             'account', 'address', 'archive', 'beacon', 'byte', 'channel', 'cipher', 'cloud',
+             'code', 'data', 'domain', 'echo', 'flux', 'forge', 'gate', 'grid', 'haven',
+             'icon', 'jet', 'kernel', 'lab', 'matrix', 'nexus', 'orbit', 'pixel', 'portal',
+             'pulse', 'quest', 'realm', 'router', 'script', 'stream', 'terminal', 'vault',
+             'wave', 'xenon', 'yard', 'zone', 'agent', 'blade', 'cache', 'drift', 'edge',
+             'frame', 'globe', 'hive', 'isle', 'jewel', 'kite', 'leaf', 'moon', 'nest',
+             'oasis', 'peak', 'quill', 'ridge', 'spark', 'trail', 'unit', 'veil', 'whirl',
+             'yarn', 'zenith', 'apex', 'bloom', 'crest', 'dawn', 'flare', 'glow', 'horizon',
+             'iris', 'jolt', 'knot', 'lark', 'maze', 'nova', 'opal', 'plume', 'quasar',
+             'rift', 'sage', 'tide', 'umbra', 'vortex', 'whisper', 'yoke', 'zephyr']
     
     # Choose random word combination
     adj = random.choice(adjectives)
@@ -108,6 +125,7 @@ def generate_unique_username():
     return username.lower()
 
 @app.post("/create_account")
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 async def create_new_account():
     try:
         domains = get_domains()
@@ -133,6 +151,7 @@ async def create_new_account():
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/messages")
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 async def fetch_messages(token: str):
     try:
         messages = get_messages(token)
