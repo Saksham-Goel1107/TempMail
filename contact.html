@@ -246,6 +246,7 @@
             }
         }
     </style>
+    <script src="https://s.pageclip.co/v1/pageclip.js" charset="utf-8"></script>
 </head>
 <body>
     <div class="container">
@@ -299,7 +300,7 @@
                     </div>
                 </div>
 
-                <form class="contact-form" id="contact-form">
+                <form action="https://send.pageclip.co/phkSjWrrSKTn9yjkmByOZz12zZW7Ilbs/contact-form" method="post" class="contact-form pageclip-form" id="contact-form">
                     <div class="form-group">
                         <label for="name">Name *</label>
                         <input type="text" id="name" name="name" required>
@@ -356,21 +357,31 @@
 
     <script>
         document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-
+            // Don't prevent default - let Pageclip handle the submission
             const submitBtn = document.getElementById('submit-btn');
             const successMessage = document.getElementById('success-message');
 
-            // Disable button
+            // Add loading state
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
-            // Simulate form submission (replace with actual API call)
+            // Fallback timeout in case Pageclip doesn't respond
             setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+            }, 10000);
+        });
+
+        // Listen for Pageclip success
+        if (window.Pageclip) {
+            window.Pageclip.on('success', () => {
+                const submitBtn = document.getElementById('submit-btn');
+                const successMessage = document.getElementById('success-message');
+
                 successMessage.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Send Message';
-                this.reset();
+                document.getElementById('contact-form').reset();
 
                 // Scroll to success message
                 successMessage.scrollIntoView({ behavior: 'smooth' });
@@ -379,8 +390,15 @@
                 setTimeout(() => {
                     successMessage.style.display = 'none';
                 }, 5000);
-            }, 1000);
-        });
+            });
+
+            window.Pageclip.on('error', () => {
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+                alert('Failed to send message. Please try again.');
+            });
+        }
     </script>
 </body>
 </html>

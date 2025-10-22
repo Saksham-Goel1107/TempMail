@@ -57,6 +57,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+    <script src="https://s.pageclip.co/v1/pageclip.js" charset="utf-8"></script>
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -2424,7 +2425,7 @@
             </div>
           </div>
           <div class="contact-form">
-            <form id="contact-form" class="contact-form-element">
+            <form action="https://send.pageclip.co/phkSjWrrSKTn9yjkmByOZz12zZW7Ilbs/contact-form" method="post" id="contact-form" class="contact-form-element pageclip-form">
               <div class="form-group">
                 <label for="contact-name">Name</label>
                 <input type="text" id="contact-name" name="name" required aria-required="true">
@@ -3363,28 +3364,53 @@
       // Contact form functionality
       function initContactForm() {
         const contactForm = document.getElementById('contact-form');
-        
+
         contactForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          
-          const formData = new FormData(contactForm);
-          const name = formData.get('name');
-          const email = formData.get('email');
-          const message = formData.get('message');
-          
-          // For demo purposes, just show a success message
-          // In a real application, you would send this data to a server
-          showToast('📧 Message sent successfully!', 'success');
-          contactForm.reset();
-          
-          // Track contact form submission
-          if (typeof gtag !== 'undefined') {
-            gtag('event', 'contact_form_submit', {
-              event_category: 'engagement',
-              event_label: 'contact_form'
-            });
-          }
+          // Don't prevent default - let Pageclip handle the submission
+          // Add loading state
+          const submitBtn = contactForm.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending...';
+
+          // Pageclip will handle the actual submission
+          // We'll listen for success/failure via Pageclip events
+          setTimeout(() => {
+            // Reset button after a delay (Pageclip should handle this, but fallback)
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }, 5000);
         });
+
+        // Listen for Pageclip success
+        if (window.Pageclip) {
+          window.Pageclip.on('success', () => {
+            showToast('📧 Message sent successfully!', 'success');
+            document.getElementById('contact-form').reset();
+
+            // Reset button
+            const submitBtn = document.getElementById('contact-form').querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+
+            // Track contact form submission
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'contact_form_submit', {
+                event_category: 'engagement',
+                event_label: 'contact_form'
+              });
+            }
+          });
+
+          window.Pageclip.on('error', () => {
+            showToast('❌ Failed to send message. Please try again.', 'error');
+
+            // Reset button
+            const submitBtn = document.getElementById('contact-form').querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+          });
+        }
       }
 
       // Analytics initialization (placeholder)
