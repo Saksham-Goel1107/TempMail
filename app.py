@@ -12,14 +12,6 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 BASE_URL = "https://api.mail.tm"
 
 @app.get("/")
@@ -57,6 +49,10 @@ async def service_worker():
 @app.get("/tempmail.png")
 async def tempmail_logo():
     return FileResponse("tempmail.png", media_type="image/png")
+
+@app.get("/favicon.ico")
+async def tempmail_favicon_logo():
+    return FileResponse("favicon.ico", media_type="image/x-icon")
 
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):

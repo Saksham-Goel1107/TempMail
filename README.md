@@ -69,10 +69,21 @@ A modern, secure, and user-friendly temporary email service built with FastAPI a
    http://127.0.0.1:8000
    ```
 
-### Docker (Optional)
+### Docker (Recommended)
 
-If you prefer using Docker:
+TempMail now supports Docker for easy deployment and development:
 
+#### Using Docker Compose (Recommended)
+```bash
+# Clone the repository
+git clone https://github.com/Saksham-Goel1107/TempMail.git
+cd TempMail
+
+# Build and run with Docker Compose
+docker-compose up --build
+```
+
+#### Using Docker directly
 ```bash
 # Build the image
 docker build -t tempmail .
@@ -80,6 +91,23 @@ docker build -t tempmail .
 # Run the container
 docker run -p 8000:8000 tempmail
 ```
+
+#### Docker Commands
+```bash
+# Run in background
+docker-compose up -d
+
+# Stop the application
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Rebuild after changes
+docker-compose up --build --force-recreate
+```
+
+The application will be available at `http://localhost:8000`
 
 ## 🚀 Usage
 
