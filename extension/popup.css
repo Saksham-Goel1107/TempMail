@@ -209,6 +209,68 @@ body {
   color: var(--text-primary);
 }
 
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 180px;
+  padding: 6px 12px 6px 32px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-icon {
+  position: absolute;
+  left: 8px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.clear-mail-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-mail-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
 .refresh-mail-btn {
   display: flex;
   align-items: center;
@@ -532,19 +594,95 @@ body {
   margin: 0;
 }
 
+/* Confirmation Modal */
+.confirmation-modal {
+  width: 320px;
+  max-width: 90vw;
+}
+
+.confirmation-icon {
+  color: var(--warning);
+  margin-bottom: 16px;
+}
+
+.confirmation-modal h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.confirmation-modal p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.confirmation-modal p .link-url {
+  display: block;
+  background: var(--bg-secondary);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--text-primary);
+  word-break: break-all;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
 /* Ensure consistent width */
 html, body {
   min-width: 420px;
   max-width: 420px;
 }
 .icon-btn.loading,
-.refresh-mail-btn.loading {
+.refresh-mail-btn.loading,
+.clear-mail-btn.loading {
   pointer-events: none;
   opacity: 0.6;
 }
 
 .icon-btn.loading svg,
-.refresh-mail-btn.loading svg {
+.refresh-mail-btn.loading svg,
+.clear-mail-btn.loading svg {
   animation: spin 0.8s linear infinite;
 }
 
@@ -573,6 +711,77 @@ html, body {
 html, body {
   min-width: 420px;
   max-width: 420px;
+}
+
+/* Small Ad Container */
+.small-ad-container {
+  margin: 12px 16px 8px 16px;
+  text-align: center;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.small-ad-container {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.small-ad-container #container-sg2hajx5z-small {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.small-ad-container .static-ad {
+  width: 100%;
+}
+
+.small-ad-container .ad-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.small-ad-container .ad-link:hover {
+  opacity: 0.8;
+}
+
+.small-ad-container .ad-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: var(--radius-sm);
+  color: white;
+}
+
+.small-ad-container .ad-icon {
+  font-size: 16px;
+}
+
+.small-ad-container .ad-text {
+  flex: 1;
+}
+
+.small-ad-container .ad-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.small-ad-container .ad-subtitle {
+  font-size: 10px;
+  opacity: 0.9;
+  line-height: 1.2;
 }
 
 /* Responsive - for very small screens */

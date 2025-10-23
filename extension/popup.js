@@ -5,6 +5,7 @@ const API_BASE_URL = 'https://pro-tempmail.onrender.com';
 let currentEmail = null;
 let currentToken = null;
 let messages = [];
+let pendingAction = null; // For confirmation modal
 
 // DOM Elements
 const loading = document.getElementById('loading');
@@ -14,10 +15,17 @@ const copyBtn = document.getElementById('copyBtn');
 const fillBtn = document.getElementById('fillBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const checkMailBtn = document.getElementById('checkMailBtn');
+const clearMailBtn = document.getElementById('clearMailBtn');
+const messageSearch = document.getElementById('messageSearch');
 const messagesContainer = document.getElementById('messagesContainer');
 const messagesList = document.getElementById('messagesList');
 const noMessages = document.getElementById('noMessages');
 const toast = document.getElementById('toast');
+const confirmationModal = document.getElementById('confirmationModal');
+const confirmationTitle = document.getElementById('confirmationTitle');
+const confirmationMessage = document.getElementById('confirmationMessage');
+const confirmOk = document.getElementById('confirmOk');
+const confirmCancel = document.getElementById('confirmCancel');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
@@ -47,6 +55,17 @@ function setupEventListeners() {
   fillBtn.addEventListener('click', fillEmailInPage);
   refreshBtn.addEventListener('click', createNewEmail);
   checkMailBtn.addEventListener('click', fetchMessages);
+  clearMailBtn.addEventListener('click', clearAllMails);
+  messageSearch.addEventListener('input', handleSearch);
+  confirmOk.addEventListener('click', handleConfirmOk);
+  confirmCancel.addEventListener('click', hideConfirmationModal);
+  
+  // Close modal when clicking on backdrop
+  confirmationModal.addEventListener('click', (e) => {
+    if (e.target === confirmationModal) {
+      hideConfirmationModal();
+    }
+  });
 }
 
 // Create new email account
@@ -144,8 +163,15 @@ function setLoading(isLoading) {
   }
 }
 
+// Handle search input
+function handleSearch() {
+  displayMessages();
+}
+
 // Display messages in the list
 function displayMessages() {
+  const searchTerm = messageSearch.value.toLowerCase().trim();
+  
   if (!messages || messages.length === 0) {
     noMessages.style.display = 'flex';
     messagesList.style.display = 'none';
@@ -153,11 +179,44 @@ function displayMessages() {
     return;
   }
 
+  // Filter messages based on search term
+  let filteredMessages = messages;
+  if (searchTerm) {
+    filteredMessages = messages.filter(msg => {
+      const from = (msg.from || '').toLowerCase();
+      const subject = (msg.subject || '').toLowerCase();
+      const text = getTextPreview(msg.text || msg.html || '').toLowerCase();
+      
+      return from.includes(searchTerm) || 
+             subject.includes(searchTerm) || 
+             text.includes(searchTerm);
+    });
+  }
+
+  if (filteredMessages.length === 0) {
+    noMessages.style.display = 'flex';
+    messagesList.style.display = 'none';
+    messagesList.innerHTML = '';
+    
+    // Update no messages text for search
+    const noMessagesText = noMessages.querySelector('p');
+    const noMessagesSubtext = noMessages.querySelector('span');
+    
+    if (searchTerm) {
+      noMessagesText.textContent = 'No messages match your search';
+      noMessagesSubtext.textContent = 'Try a different search term';
+    } else {
+      noMessagesText.textContent = 'No messages yet';
+      noMessagesSubtext.textContent = 'Emails will appear here';
+    }
+    return;
+  }
+
   noMessages.style.display = 'none';
   messagesList.style.display = 'block';
 
   // Sort messages by date (newest first)
-  const sortedMessages = [...messages].sort((a, b) => {
+  const sortedMessages = [...filteredMessages].sort((a, b) => {
     return new Date(b.date) - new Date(a.date);
   });
 
@@ -186,6 +245,11 @@ function displayMessages() {
     item.addEventListener('click', () => {
       item.classList.toggle('expanded');
     });
+  });
+
+  // Add click listeners to links in message bodies
+  document.querySelectorAll('.message-body a').forEach(link => {
+    link.addEventListener('click', handleLinkClick);
   });
 }
 
@@ -333,6 +397,66 @@ function showToast(message, type = 'info') {
   }, 3000);
 }
 
+// Show confirmation modal
+function showConfirmationModal(title, message) {
+  confirmationTitle.textContent = title;
+  confirmationMessage.innerHTML = message;
+  confirmationModal.style.display = 'flex';
+}
+
+// Hide confirmation modal
+function hideConfirmationModal() {
+  confirmationModal.style.display = 'none';
+  pendingAction = null;
+}
+
+// Handle confirm OK button
+function handleConfirmOk() {
+  if (!pendingAction) return;
+  
+  if (pendingAction.type === 'openLink') {
+    chrome.tabs.create({ url: pendingAction.url });
+  } else if (pendingAction.type === 'clearMails') {
+    clearMailsConfirmed();
+  }
+  
+  hideConfirmationModal();
+}
+
+// Clear all mails
+function clearAllMails() {
+  if (messages.length === 0) {
+    showToast('No messages to clear', 'info');
+    return;
+  }
+  
+  pendingAction = { type: 'clearMails' };
+  showConfirmationModal(
+    'Clear All Messages',
+    `Are you sure you want to delete all ${messages.length} message(s)? This action cannot be undone.`
+  );
+}
+
+// Actually clear the mails after confirmation
+async function clearMailsConfirmed() {
+  clearMailBtn.classList.add('loading');
+  
+  try {
+    messages = [];
+    await chrome.storage.local.set({ messages: [] });
+    messageSearch.value = ''; // Clear search input
+    displayMessages();
+    showToast('All messages cleared', 'success');
+  } catch (error) {
+    console.error('Error clearing messages:', error);
+    showToast('Failed to clear messages', 'error');
+  } finally {
+    setTimeout(() => {
+      clearMailBtn.classList.remove('loading');
+    }, 500);
+  }
+}
+
 // Utility functions
 function escapeHtml(unsafe) {
   if (!unsafe) return '';
@@ -366,4 +490,16 @@ function sanitizeHtml(html) {
   });
   
   return div.innerHTML;
+}
+
+// Handle link clicks with confirmation
+function handleLinkClick(event) {
+  event.preventDefault();
+  const url = event.target.href;
+  
+  pendingAction = { type: 'openLink', url: url };
+  showConfirmationModal(
+    'Open External Link',
+    `This link takes you to another website.<br><span class="link-url">${url}</span><br>Do you want to open it in a new tab?`
+  );
 }
