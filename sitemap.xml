@@ -12,6 +12,14 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Extension Page -->
+  <url>
+    <loc>https://pro-tempmail.onrender.com/extensions</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
   <!-- Privacy Policy -->
   <url>
     <loc>https://pro-tempmail.onrender.com/privacy</loc>
