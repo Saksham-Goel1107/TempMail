@@ -1597,6 +1597,35 @@
         transform: rotate(180deg) scale(0.95);
       }
 
+      /* Status page button */
+      .status-button {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 2px solid var(--border);
+        background: var(--light);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .status-button:hover {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow);
+      }
+
+      .status-button:active {
+        transform: translateY(0);
+      }
+
       /* Toast notifications */
       .toast-container {
         position: fixed;
@@ -2050,6 +2079,9 @@
         </ul>
       </nav>
       <div class="header-right">
+        <a href="https://pro-tempmail-status.vercel.app" rel="noopener noreferrer" class="status-button" title="View Status Page" aria-label="Go to status page">
+          Status
+        </a>
         <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle between light and dark theme">
           🌙
         </button>
