@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Download TempMail Pro Disposable extension for Microsoft Edge. Create temporary emails instantly, view messages in real-time, and protect your privacy with one-click email generation." />
+    <meta name="keywords" content="temporary email, disposable email, temp mail, microsoft edge extension, browser extension, privacy, anonymous email" />
+    <meta name="author" content="Saksham Goel" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#6366f1" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TempMail Pro Extension - Microsoft Edge" />
+    <meta property="og:description" content="Download the official TempMail Pro extension for Microsoft Edge. Generate temporary emails instantly, view messages in real-time, and protect your privacy." />
+    <meta property="og:image" content="https://pro-tempmail.onrender.com/extension-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="TempMail Pro Extension - Microsoft Edge" />
+    <meta property="twitter:description" content="Download the official TempMail Pro extension for Microsoft Edge. Generate temporary emails instantly, view messages in real-time, and protect your privacy." />
+    <meta property="twitter:image" content="https://pro-tempmail.onrender.com/extension-image.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="tempmail.png" />
+
+    <title>TempMail Extension for Microsoft Edge</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #8b5cf6;
+        --secondary: #10b981;
+        --secondary-dark: #059669;
+        --accent: #f59e0b;
+        --dark: #1e293b;
+        --dark-light: #334155;
+        --dark-lighter: #475569;
+        --light: #f8fafc;
+        --light-dark: #e2e8f0;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --text-light: #94a3b8;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --shadow-lg: rgba(0, 0, 0, 0.15);
+        --shadow-xl: rgba(0, 0, 0, 0.25);
+        --bg-gradient-1: #ffffff;
+        --bg-gradient-2: #f8fafc;
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --blur: blur(10px);
+        --animation-speed: 0.3s;
+        --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      [data-theme="dark"] {
+        --primary: #818cf8;
+        --primary-dark: #6366f1;
+        --primary-light: #a78bfa;
+        --secondary: #34d399;
+        --secondary-dark: #10b981;
+        --accent: #fbbf24;
+        --dark: #0f172a;
+        --dark-light: #1e293b;
+        --dark-lighter: #334155;
+        --light: #0f172a;
+        --light-dark: #1e293b;
+        --border: #334155;
+        --text: #f1f5f9;
+        --text-muted: #cbd5e1;
+        --text-light: #94a3b8;
+        --shadow: rgba(0, 0, 0, 0.4);
+        --shadow-lg: rgba(0, 0, 0, 0.5);
+        --shadow-xl: rgba(0, 0, 0, 0.6);
+        --bg-gradient-1: #0f172a;
+        --bg-gradient-2: #020617;
+        --glass-bg: rgba(15, 23, 42, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.1);
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: var(--text);
+        background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        animation: fadeIn 1s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 40% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 60% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+        z-index: -2;
+        pointer-events: none;
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        33% { transform: translateY(-10px) rotate(1deg); }
+        66% { transform: translateY(10px) rotate(-1deg); }
+      }
+
+      /* Animated background shapes */
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+          radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
+        z-index: -1;
+        pointer-events: none;
+        animation: pulse 15s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+      }
+
+      [data-theme="dark"] body::before {
+        background: radial-gradient(
+            circle at 20% 50%,
+            rgba(99, 102, 241, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(139, 92, 246, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 20%,
+            rgba(236, 72, 153, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 60% 30%,
+            rgba(52, 211, 153, 0.05) 0%,
+            transparent 50%
+          );
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+
+      /* Navigation Header */
+      .nav-header {
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-bottom: 1px solid var(--glass-border);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 20px var(--shadow);
+        transition: all var(--animation-speed) var(--animation-timing);
+        animation: slideDown 0.8s ease-out;
+      }
+
+      @keyframes slideDown {
+        from { transform: translateY(-100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .nav-header:hover {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 4px 30px var(--shadow-lg);
+      }
+
+      [data-theme="dark"] .nav-header {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .nav-header:hover {
+        background: rgba(15, 23, 42, 0.3);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-brand .brand-link {
+        text-decoration: none;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .brand-icon {
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: 8px;
+        display: inline-block;
+        border: 2px solid rgba(0,0,0,0.06);
+        background: white;
+      }
+
+      .nav-brand .brand-text {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-home-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 12px;
+        background: var(--glass-bg);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: 1px solid var(--glass-border);
+        transition: all var(--animation-speed) var(--animation-timing);
+        backdrop-filter: var(--blur);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-home-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+        transition: left 0.6s ease;
+      }
+
+      .nav-home-btn:hover::before {
+        left: 100%;
+      }
+
+      .nav-home-btn:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        border-color: var(--primary);
+      }
+
+      [data-theme="dark"] .nav-home-btn {
+        background: var(--glass-bg);
+        color: var(--text);
+        border-color: var(--glass-border);
+      }
+
+      .theme-toggle {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--glass-border);
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: all var(--animation-speed) var(--animation-timing);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px var(--shadow);
+      }
+
+      .theme-toggle::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.6s ease;
+      }
+
+      .theme-toggle:hover::before {
+        width: 60px;
+        height: 60px;
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--primary);
+        transform: rotate(180deg) scale(1.1);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+      }
+
+      .theme-toggle:active {
+        transform: rotate(180deg) scale(0.95);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 4rem;
+        padding: 4rem 0 2rem;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 1s ease-out 0.2s both;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+        z-index: -1;
+      }
+
+      @keyframes rotate {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+
+      .header h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light), var(--secondary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 2rem;
+        line-height: 1.1;
+        position: relative;
+        letter-spacing: -0.02em;
+        animation: textGlow 3s ease-in-out infinite alternate;
+      }
+
+      .header h1::after {
+        content: "✨";
+        position: absolute;
+        top: -10px;
+        right: -40px;
+        font-size: 1.5rem;
+        animation: sparkle 2s ease-in-out infinite;
+      }
+
+      .header-subtitle {
+        font-size: 1.4rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-bottom: 3rem;
+        position: relative;
+        animation: fadeInUp 1s ease-out 0.3s both;
+      }
+
+      .header-subtitle::before {
+        content: "🔒";
+        margin-right: 0.5rem;
+        vertical-align: middle;
+      }
+
+      .features-highlights {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        animation: fadeInUp 1s ease-out 0.4s both;
+      }
+
+      .feature-highlight {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-radius: 50px;
+        border: 1px solid var(--glass-border);
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all var(--animation-speed) var(--animation-timing);
+        animation: bounceIn 0.8s ease-out both;
+        animation-delay: calc(var(--highlight-index, 0) * 0.1s);
+      }
+
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        70% {
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .feature-highlight:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px var(--shadow-lg);
+        background: rgba(255, 255, 255, 0.3);
+        border-color: var(--primary);
+      }
+
+      .feature-highlight .icon {
+        font-size: 1.2rem;
+        color: var(--primary);
+      }
+
+      [data-theme="dark"] .feature-highlight {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .feature-highlight:hover {
+        background: rgba(15, 23, 42, 0.3);
+      }
+
+      .header-description {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        animation: fadeInUp 1s ease-out 0.5s both;
+      }
+
+      .description-section {
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-radius: 20px;
+        border: 1px solid var(--glass-border);
+        position: relative;
+        transition: all var(--animation-speed) var(--animation-timing);
+        animation: slideInFromBottom 1s ease-out both;
+        animation-delay: calc(var(--desc-index, 0) * 0.2s);
+      }
+
+      .description-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px var(--shadow-lg);
+        background: rgba(255, 255, 255, 0.4);
+        border-color: var(--primary);
+      }
+
+      .description-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--primary), var(--secondary));
+        border-radius: 2px 0 0 2px;
+      }
+
+      .description-section h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .description-section h3 .icon {
+        font-size: 1.5rem;
+      }
+
+      .description-section p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        margin: 0;
+      }
+
+      [data-theme="dark"] .description-section {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .description-section:hover {
+        background: rgba(15, 23, 42, 0.4);
+      }
+
+      @keyframes countUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .extension-preview {
+        text-align: center;
+        margin: 4rem 0;
+        position: relative;
+        animation: fadeInUp 1s ease-out 0.6s both;
+      }
+
+      .extension-screenshot {
+        max-width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow:
+          0 20px 40px var(--shadow),
+          0 0 0 1px var(--glass-border);
+        border: 2px solid var(--glass-border);
+        transition: all var(--animation-speed) var(--animation-timing);
+        position: relative;
+        backdrop-filter: var(--blur);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .extension-screenshot::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+        border-radius: 22px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity var(--animation-speed) ease;
+      }
+
+      .extension-screenshot:hover::before {
+        opacity: 0.3;
+      }
+
+      .extension-screenshot:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow:
+          0 30px 60px var(--shadow-lg),
+          0 0 0 1px var(--primary),
+          0 0 30px rgba(99, 102, 241, 0.2);
+      }
+
+      .image-caption {
+        margin-top: 2rem;
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-style: italic;
+        font-weight: 500;
+        animation: fadeIn 1s ease-out 0.8s both;
+        position: relative;
+      }
+
+      .image-caption::before {
+        content: "✨";
+        position: absolute;
+        left: -25px;
+        top: 50%;
+        transform: translateY(-50%);
+        animation: sparkle 2s ease-in-out infinite;
+      }
+
+      @keyframes sparkle {
+        0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+        50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+      }
+
+      .extension-card {
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow:
+          0 10px 30px var(--shadow),
+          0 0 0 1px var(--glass-border);
+        margin-bottom: 3rem;
+        border: 1px solid var(--glass-border);
+        position: relative;
+        overflow: hidden;
+        transition: all var(--animation-speed) var(--animation-timing);
+        animation: slideInFromBottom 1s ease-out both;
+        animation-delay: calc(var(--card-index, 0) * 0.2s);
+      }
+
+      @keyframes slideInFromBottom {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .extension-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        border-radius: 24px 24px 0 0;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+
+      .extension-card:hover {
+        transform: translateY(-5px);
+        box-shadow:
+          0 20px 50px var(--shadow-lg),
+          0 0 0 1px var(--primary),
+          0 0 40px rgba(99, 102, 241, 0.1);
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      [data-theme="dark"] .extension-card {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .extension-card:hover {
+        background: rgba(15, 23, 42, 0.3);
+      }
+
+      .extension-card h2 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .extension-card p {
+        margin-bottom: 2rem;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        line-height: 1.7;
+      }
+
+      .steps {
+        list-style: none;
+        counter-reset: step-counter;
+        margin-bottom: 2rem;
+      }
+
+      .steps li {
+        counter-increment: step-counter;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem 2rem 1.5rem 4rem;
+        position: relative;
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-radius: 16px;
+        border: 1px solid var(--glass-border);
+        transition: all var(--animation-speed) var(--animation-timing);
+        animation: slideInFromLeft 0.8s ease-out both;
+        animation-delay: calc(var(--step-index, 0) * 0.1s);
+      }
+
+      @keyframes slideInFromLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .steps li:hover {
+        transform: translateX(8px);
+        box-shadow:
+          0 8px 25px var(--shadow-lg),
+          0 0 0 1px var(--primary);
+        background: rgba(255, 255, 255, 0.4);
+        border-color: var(--primary);
+      }
+
+      .steps li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2.5rem;
+        height: 2.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        transition: all var(--animation-speed) ease;
+        z-index: 1;
+      }
+
+      .steps li:hover::before {
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      [data-theme="dark"] .steps li {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .steps li:hover {
+        background: rgba(15, 23, 42, 0.4);
+      }
+
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all var(--animation-speed) var(--animation-timing);
+        box-shadow:
+          0 8px 20px rgba(99, 102, 241, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        border: none;
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+
+      @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1); }
+        50% { box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2); }
+      }
+
+      .download-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+      }
+
+      .download-btn:hover::before {
+        left: 100%;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow:
+          0 15px 35px rgba(99, 102, 241, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.2),
+          0 0 40px rgba(99, 102, 241, 0.3);
+      }
+
+      .download-btn:active {
+        transform: translateY(-2px) scale(0.98);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-radius: 16px;
+        border: 1px solid var(--glass-border);
+        transition: all var(--animation-speed) var(--animation-timing);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInScale 0.8s ease-out both;
+        animation-delay: calc(var(--feature-index, 0) * 0.1s);
+      }
+
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .feature-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--primary), var(--secondary));
+        opacity: 0;
+        transition: opacity var(--animation-speed) ease;
+      }
+
+      .feature-item:hover::before {
+        opacity: 1;
+      }
+
+      .feature-item:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow:
+          0 12px 30px var(--shadow-lg),
+          0 0 0 1px var(--primary);
+        background: rgba(255, 255, 255, 0.4);
+        border-color: var(--primary);
+      }
+
+      [data-theme="dark"] .feature-item {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .feature-item:hover {
+        background: rgba(15, 23, 42, 0.4);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+      }
+
+      .feature-content h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+
+      .feature-content p {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .usage-guide {
+        margin-bottom: 2rem;
+      }
+
+      .usage-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: var(--blur);
+        border-radius: 16px;
+        border: 1px solid var(--glass-border);
+        transition: all var(--animation-speed) var(--animation-timing);
+        animation: slideInFromRight 0.8s ease-out both;
+        animation-delay: calc(var(--usage-index, 0) * 0.15s);
+      }
+
+      @keyframes slideInFromRight {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .usage-step:hover {
+        transform: translateX(8px);
+        box-shadow:
+          0 8px 25px var(--shadow-lg),
+          0 0 0 1px var(--primary);
+        background: rgba(255, 255, 255, 0.4);
+        border-color: var(--primary);
+      }
+
+      [data-theme="dark"] .usage-step {
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+      }
+
+      [data-theme="dark"] .usage-step:hover {
+        background: rgba(15, 23, 42, 0.4);
+      }
+
+      .step-number {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+        flex-shrink: 0;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        transition: all var(--animation-speed) ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .step-number::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.4s ease;
+      }
+
+      .usage-step:hover .step-number::before {
+        width: 40px;
+        height: 40px;
+      }
+
+      .usage-step:hover .step-number {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      .step-content h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+
+      .step-content p {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .tips-section {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+        animation: gradientShift 4s ease-in-out infinite;
+      }
+
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      .tips-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="sparkles" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="5" cy="15" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23sparkles)"/></svg>');
+        opacity: 0.3;
+        animation: twinkle 3s ease-in-out infinite;
+      }
+
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+      }
+
+      .tips-section h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .tips-section ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .tips-section li {
+        margin-bottom: 0.8rem;
+        padding-left: 1rem;
+        position: relative;
+      }
+
+      .tips-section li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: bold;
+      }
+
+      .tips-section strong {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      /* Final CTA Section */
+      .final-cta {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--secondary) 100%);
+        padding: 4rem 0;
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+        animation: gradientFlow 6s ease-in-out infinite;
+      }
+
+      @keyframes gradientFlow {
+        0%, 100% {
+          background-position: 0% 50%;
+          filter: hue-rotate(0deg);
+        }
+        50% {
+          background-position: 100% 50%;
+          filter: hue-rotate(10deg);
+        }
+      }
+
+      .final-cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="particles" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23particles)"/></svg>');
+        animation: particleFloat 8s ease-in-out infinite;
+      }
+
+      @keyframes particleFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-5px) rotate(90deg); }
+        50% { transform: translateY(-10px) rotate(180deg); }
+        75% { transform: translateY(-5px) rotate(270deg); }
+      }
+
+      .cta-content {
+        text-align: center;
+        color: white;
+        position: relative;
+        z-index: 1;
+      }
+
+      .cta-content h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .cta-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .cta-primary-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        color: var(--primary);
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        border: 2px solid white;
+      }
+
+      .cta-primary-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      .cta-secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .cta-secondary-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .back-link {
+        display: inline-block;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 2rem;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .nav-container {
+          padding: 1rem;
+        }
+
+        .nav-brand .brand-text {
+          font-size: 1.2rem;
+        }
+
+        .nav-home-btn {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.8rem;
+        }
+
+        .header h1 {
+          font-size: 2.5rem;
+        }
+
+        .header-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .features-highlights {
+          gap: 1rem;
+        }
+
+        .feature-highlight {
+          padding: 0.5rem 1rem;
+          font-size: 0.8rem;
+        }
+
+        .description-section {
+          padding: 1.5rem;
+        }
+
+        .description-section h3 {
+          font-size: 1.1rem;
+        }
+
+        .container {
+          padding: 1rem 1rem 3rem;
+        }
+
+        .extension-card {
+          padding: 2rem 1.5rem;
+        }
+
+        .extension-card h2 {
+          font-size: 1.8rem;
+        }
+
+        .steps li {
+          padding: 1rem 1.5rem 1rem 3.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .steps li::before {
+          width: 2rem;
+          height: 2rem;
+          font-size: 0.9rem;
+          left: -10px;
+        }
+
+        .download-btn {
+          padding: 0.8rem 1.5rem;
+          font-size: 1rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .feature-item {
+          padding: 1rem;
+        }
+
+        .extension-placeholder {
+          height: 250px;
+        }
+
+        .placeholder-icon {
+          font-size: 3rem;
+        }
+
+        .usage-step {
+          flex-direction: column;
+          text-align: center;
+          gap: 1rem;
+        }
+
+        .step-number {
+          align-self: center;
+        }
+
+        .tips-section {
+          padding: 1.5rem;
+        }
+
+        .final-cta {
+          padding: 3rem 0;
+        }
+
+        .cta-content h2 {
+          font-size: 2rem;
+        }
+
+        .cta-content p {
+          font-size: 1rem;
+        }
+
+        .cta-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .cta-primary-btn,
+        .cta-secondary-btn {
+          width: 100%;
+          max-width: 300px;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Header -->
+    <div class="nav-header">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <a href="/" class="brand-link">
+            <img src="tempmail.png" alt="TempMail Pro" class="brand-icon" />
+            <span class="brand-text">TEMPMAIL PRO</span>
+          </a>
+        </div>
+        <div class="nav-controls">
+          <a href="/" class="nav-home-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 12L5 10M5 10L12 3L19 10M5 10V20C5 20.5523 5.44772 21 6 21H9M19 10L21 12M19 10V20C19 20.5523 18.5523 21 18 21H15M9 21V15C9 14.4477 9.44772 14 10 14H14C14.5523 14 15 14.4477 15 15V21M9 21H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Home
+          </a>
+          <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle between light and dark theme">
+            🌙
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>TempMail Extension for Microsoft Edge</h1>
+
+        <p class="header-subtitle">The ultimate privacy-focused browser extension for temporary emails</p>
+
+        <div class="features-highlights">
+          <div class="feature-highlight" style="--highlight-index: 0;">
+            <span class="icon">⚡</span>
+            <span>Instant Generation</span>
+          </div>
+          <div class="feature-highlight" style="--highlight-index: 1;">
+            <span class="icon">🔒</span>
+            <span>100% Anonymous</span>
+          </div>
+          <div class="feature-highlight" style="--highlight-index: 2;">
+            <span class="icon">🚫</span>
+            <span>No Registration</span>
+          </div>
+          <div class="feature-highlight" style="--highlight-index: 3;">
+            <span class="icon">💎</span>
+            <span>Completely Free</span>
+          </div>
+        </div>
+
+        <div class="header-description">
+          <div class="description-section" style="--desc-index: 0;">
+            <h3>
+              <span class="icon">🎯</span>
+              What is TempMail Pro?
+            </h3>
+            <p>TempMail Pro is the ultimate privacy-focused solution for managing temporary and disposable email addresses directly from your browser. It offers a seamless, secure, and efficient way to keep your real inbox free from spam, while maintaining complete anonymity online.</p>
+          </div>
+
+          <div class="description-section" style="--desc-index: 1;">
+            <h3>
+              <span class="icon">⚡</span>
+              Lightning Fast & Real-time
+            </h3>
+            <p>Generate a temporary email instantly with just one click. View incoming messages in real-time right within your browser—no need to switch tabs. The autofill email feature makes it effortless to get the email address filled and use it wherever you need.</p>
+          </div>
+
+          <div class="description-section" style="--desc-index: 2;">
+            <h3>
+              <span class="icon">🛡️</span>
+              Privacy First, Always
+            </h3>
+            <p>There's absolutely no registration or setup required. Simply open TempMail Pro, and you're ready to go. Every session is private and secure, ensuring your personal identity remains completely protected from unwanted advertisers or spam.</p>
+          </div>
+
+          <div class="description-section" style="--desc-index: 3;">
+            <h3>
+              <span class="icon">🎨</span>
+              Perfect for Every Use Case
+            </h3>
+            <p>Perfect for quick website sign-ups, online testing, temporary registrations, and keeping your main inbox clean. Whether you're a developer testing email functions, a privacy-conscious user, or just someone tired of spam—TempMail Pro makes your online experience safer and more efficient.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="extension-preview">
+        <img src="extension-image.png" alt="TempMail Pro Extension Screenshot" class="extension-screenshot">
+        <p class="image-caption">TempMail Pro Extension in action - clean, fast, and privacy-focused</p>
+      </div>
+
+      <div class="extension-card">
+        <h2>🚀 Download & Install</h2>
+        <p>Follow these simple steps to install the TempMail extension on your Microsoft Edge browser:</p>
+
+        <ol class="steps">
+          <li><strong>Open Microsoft Edge:</strong> Launch your Microsoft Edge browser on your computer.</li>
+          <li><strong>Visit the Microsoft Edge Add-ons Store:</strong> Go to the official Microsoft Edge Add-ons website or click the download button below.</li>
+          <li><strong>Find TempMail Pro Disposable:</strong> Search for "TempMail Pro Disposable" in the store, or use the direct link provided.</li>
+          <li><strong>Install the Extension:</strong> Click the "Get" button to add the extension to your browser.</li>
+        </ol>
+
+        <a href="https://microsoftedge.microsoft.com/addons/detail/tempmail-pro-disposable/ofmaflmfhgpbgngelfhdpkdjaijfpaof" class="download-btn" target="_blank" rel="noopener noreferrer">
+          📥 Download for Microsoft Edge
+        </a>
+      </div>
+
+      <div class="extension-card">
+        <h2>🎯 How to Use</h2>
+        <p>Once installed, using TempMail Pro is incredibly simple. Here's how to get started:</p>
+
+        <div class="usage-guide">
+          <div class="usage-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Click the Extension Icon</h3>
+              <p>Look for the TempMail Pro icon in your browser toolbar and click it to open the extension popup.</p>
+            </div>
+          </div>
+
+          <div class="usage-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Generate Email</h3>
+              <p>Click the "Generate New Email" button to instantly create a fresh temporary email address.</p>
+            </div>
+          </div>
+
+          <div class="usage-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Copy & Use</h3>
+              <p>Copy the generated email address and use it wherever you need a temporary email.</p>
+            </div>
+          </div>
+
+          <div class="usage-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Check Messages</h3>
+              <p>Return to the extension to view any incoming messages in real-time.</p>
+            </div>
+          </div>
+
+          <div class="usage-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h3>Auto-fill</h3>
+              <p>On websites, the extension will show a button to automatically fill email fields for you.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-section">
+          <h3>💡 Pro Tips</h3>
+          <ul>
+            <li><strong>Quick Access:</strong> Pin the extension to your toolbar for instant access</li>
+            <li><strong>Multiple Emails:</strong> Generate different emails for different purposes</li>
+            <li><strong>Privacy:</strong> Each email session is completely isolated and secure</li>
+            <li><strong>Speed:</strong> Messages appear instantly without page refreshes</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="extension-card">
+        <h2>✨ Features</h2>
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-content">
+              <h3>Instant Creation</h3>
+              <p>Generate temporary emails with just one click</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">👁️</div>
+            <div class="feature-content">
+              <h3>Real-time Updates</h3>
+              <p>View incoming messages instantly in your browser</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-content">
+              <h3>Privacy First</h3>
+              <p>Complete anonymity with no data storage</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🚫</div>
+            <div class="feature-content">
+              <h3>No Registration</h3>
+              <p>Ready to use immediately, no setup required</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔗</div>
+            <div class="feature-content">
+              <h3>Auto-fill Integration</h3>
+              <p>Seamlessly fill email fields on any website</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🛡️</div>
+            <div class="feature-content">
+              <h3>Secure & Safe</h3>
+              <p>SSL encryption and advanced security measures</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final CTA Section -->
+    <div class="final-cta">
+      <div class="container">
+        <div class="cta-content">
+          <h2>🚀 Ready to Protect Your Privacy?</h2>
+          <p>Join thousands of users who trust TempMail Pro for their temporary email needs.</p>
+          <div class="cta-buttons">
+            <a href="https://microsoftedge.microsoft.com/addons/detail/tempmail-pro-disposable/ofmaflmfhgpbgngelfhdpkdjaijfpaof" class="cta-primary-btn" target="_blank" rel="noopener noreferrer">
+              📥 Download Extension For Edge
+            </a>
+            <a href="/" class="cta-secondary-btn">
+              🌐 Visit Web App
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Dark mode functionality
+      const initTheme = () => {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        updateThemeIcon(savedTheme);
+      };
+
+      const toggleTheme = () => {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeIcon(newTheme);
+      };
+
+      const updateThemeIcon = (theme) => {
+        const icon = document.getElementById("theme-toggle");
+        icon.textContent = theme === "dark" ? "☀️" : "🌙";
+      };
+
+      // Initialize theme on load
+      initTheme();
+
+      // Event Listeners
+      document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+    </script>
+  </body>
+</html>

@@ -397,6 +397,66 @@
         line-height: 1.6;
       }
 
+      /* Extension CTA Section */
+      .extension-cta-section {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 60px 0;
+        position: relative;
+        z-index: 0;
+      }
+
+      .extension-cta-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      [data-theme="dark"] .extension-cta-card {
+        background: rgba(30, 41, 59, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .extension-cta-content h3 {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 16px;
+      }
+
+      .extension-cta-content p {
+        font-size: 16px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .extension-cta-button {
+        display: inline-block;
+        background: var(--primary);
+        color: white;
+        padding: 14px 32px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .extension-cta-button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+      }
+
       /* Contact Section */
       .contact-section {
         background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
@@ -2074,6 +2134,7 @@
         <ul class="nav-list">
           <li><a href="#home" class="nav-link" aria-label="Go to home section">Home</a></li>
           <li><a href="#features" class="nav-link" aria-label="Go to features section">Features</a></li>
+          <li><a href="/extensions" class="nav-link" aria-label="Go to extensions page">Extensions</a></li>
           <li><a href="#about" class="nav-link" aria-label="Go to about section">About</a></li>
           <li><a href="#contact" class="nav-link" aria-label="Go to contact section">Contact</a></li>
         </ul>
@@ -2284,6 +2345,19 @@
             <div class="feature-icon">🎨</div>
             <h3>Modern UI</h3>
             <p>Beautiful, intuitive interface with dark/light theme support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extension CTA Section -->
+    <div class="extension-cta-section">
+      <div class="container">
+        <div class="extension-cta-card">
+          <div class="extension-cta-content">
+            <h3>🚀 Get TempMail Extension</h3>
+            <p>Create temporary emails instantly without leaving your browser tab. Available for Microsoft Edge!</p>
+            <a href="/extensions" class="extension-cta-button">Download Extension</a>
           </div>
         </div>
       </div>

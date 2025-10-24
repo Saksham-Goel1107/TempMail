@@ -30,6 +30,10 @@ async def terms():
 async def contact():
     return FileResponse("contact.html")
 
+@app.get("/extensions")
+async def extensions():
+    return FileResponse("extensions.html")
+
 @app.get("/robots.txt")
 async def robots():
     return FileResponse("robots.txt", media_type="text/plain")
@@ -49,6 +53,9 @@ async def service_worker():
 @app.get("/tempmail.png")
 async def tempmail_logo():
     return FileResponse("tempmail.png", media_type="image/png")
+@app.get("/extension-image.png")
+async def tempmail_logo():
+    return FileResponse("extension-image.png", media_type="image/png")
 
 @app.get("/favicon.ico")
 async def tempmail_favicon_logo():

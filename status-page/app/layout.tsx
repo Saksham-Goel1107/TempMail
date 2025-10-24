@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "TempMail Status",
   description: "Status page for TempMail services",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
