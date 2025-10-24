@@ -54,6 +54,10 @@ async def tempmail_logo():
 async def tempmail_favicon_logo():
     return FileResponse("favicon.ico", media_type="image/x-icon")
 
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):
     return HTMLResponse(
