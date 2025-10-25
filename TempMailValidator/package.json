@@ -1,0 +1,24 @@
+{
+  "name": "tempmailvalidator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Saksham Goel",
+  "license": "ISC",
+  "dependencies": {
+    "@arcjet/node": "^1.0.0-beta.13",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "node-fetch": "^3.3.2",
+    "path": "^0.12.7"
+  }
+}

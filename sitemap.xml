@@ -20,6 +20,22 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Email Detector Test Page -->
+  <url>
+    <loc>https://pro-tempmail.onrender.com/test-disposable-email-detector</loc>
+    <lastmod>2025-10-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Email Detector Docs Page -->
+  <url>
+    <loc>https://pro-tempmail.onrender.com/docs-disposable-email-detector</loc>
+    <lastmod>2025-10-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
   <!-- Privacy Policy -->
   <url>
     <loc>https://pro-tempmail.onrender.com/privacy</loc>

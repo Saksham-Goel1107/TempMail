@@ -18,6 +18,14 @@ BASE_URL = "https://api.mail.tm"
 async def read_root():
     return FileResponse("index.html")
 
+@app.get("/test-disposable-email-detector")
+async def read_root():
+    return FileResponse("test-disposable-email-detector.html")
+
+@app.get("/docs-disposable-email-detector")
+async def docs_disposable_email_detector():
+    return FileResponse("docs-disposable-email-detector.html")
+
 @app.get("/privacy")
 async def privacy():
     return FileResponse("privacy.html")
