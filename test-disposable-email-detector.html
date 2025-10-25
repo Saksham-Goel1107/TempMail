@@ -693,7 +693,7 @@
             checkBtn.innerHTML = '<span class="loading"></span>🔍 Analyzing...';
 
             try {
-                const response = await fetch(`/check?email=${encodeURIComponent(email)}`);
+                const response = await fetch(`https://pro-tempmail-api.onrender.com/check?email=${encodeURIComponent(email)}`);
                 const data = await response.json();
 
                 if (response.ok) {
