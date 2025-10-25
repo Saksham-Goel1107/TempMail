@@ -913,6 +913,14 @@
         margin-top: 4px;
       }
 
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: auto;
+        flex: none;
+        border-radius: 6px;
+      }
+
       .email-info {
         background: rgba(99, 102, 241, 0.05);
         border-left: 4px solid var(--primary);
@@ -1050,6 +1058,9 @@
 
       .message-list {
         min-height: 300px;
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
 
       .message-item {

@@ -218,6 +218,13 @@
               <input type="text" id="custom-username" class="username-input" placeholder="Leave empty for random username" maxlength="50">
               <small class="input-help">Only letters, numbers, dots, and underscores allowed</small>
             </div>
+
+            <div class="option-row">
+              <label for="webhook-url">Webhook URL (optional):</label>
+              <input type="url" id="webhook-url" class="username-input" placeholder="https://your-app.com/webhook" maxlength="500">
+              <small class="input-help">Get notified when new emails arrive. Leave empty to disable. Only works until the current tab is opened.</small>
+              <button class="btn btn-sm" id="configure-webhook-btn" style="margin-top: 8px; padding: 6px 12px; font-size: 12px;">Configure Webhook</button>
+            </div>
           </div>
 
           <div class="email-info">

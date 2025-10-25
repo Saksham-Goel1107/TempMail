@@ -7,6 +7,8 @@ import time
 import hashlib
 import uuid
 from tenacity import retry, stop_after_attempt, wait_exponential
+import asyncio
+import aiohttp
 
 app = FastAPI()
 
@@ -15,6 +17,56 @@ app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 app.mount("/scripts", StaticFiles(directory="scripts"), name="scripts")
 
 BASE_URL = "https://api.mail.gw"
+
+# Webhook configurations storage (in-memory, only works while program is running)
+webhook_configs = {}
+# Track sent webhook message IDs to avoid duplicates
+sent_webhook_messages = set()
+
+# Webhook functionality
+async def send_webhook_notification(webhook_url: str, email_data: dict):
+    """Send webhook notification asynchronously"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            payload = {
+                "event": "new_email",
+                "timestamp": int(time.time()),
+                "data": email_data
+            }
+            async with session.post(webhook_url, json=payload, timeout=10) as response:
+                if response.status >= 200 and response.status < 300:
+                    print(f"✅ Webhook sent successfully to {webhook_url}")
+                else:
+                    print(f"⚠️ Webhook failed with status {response.status} for {webhook_url}")
+    except Exception as e:
+        print(f"❌ Webhook error for {webhook_url}: {str(e)}")
+
+def trigger_webhooks(email: str, new_messages: list):
+    """Trigger webhooks for new messages"""
+    if not new_messages:
+        return
+
+    # Find webhook config for this email
+    webhook_url = webhook_configs.get(email)
+    if not webhook_url:
+        return
+
+    # Send webhook for each new message
+    for message in new_messages:
+        email_data = {
+            "email": email,
+            "message": {
+                "id": message["id"],
+                "from": message["from"],
+                "subject": message["subject"],
+                "text": message["text"],
+                "html": message["html"],
+                "date": message["date"],
+                "hasAttachments": message["hasAttachments"]
+            }
+        }
+        # Create task for async webhook sending
+        asyncio.create_task(send_webhook_notification(webhook_url, email_data))
 
 @app.get("/")
 async def read_root():
@@ -70,6 +122,45 @@ async def tempmail_logo():
 @app.get("/favicon.ico")
 async def tempmail_favicon_logo():
     return FileResponse("favicon.ico", media_type="image/x-icon")
+
+@app.post("/webhook/configure")
+async def configure_webhook(request: Request):
+    """Configure webhook URL for an email address"""
+    try:
+        body = await request.json()
+        email = body.get("email")
+        webhook_url = body.get("webhook_url")
+
+        if not email:
+            raise HTTPException(status_code=400, detail="Email is required")
+
+        if webhook_url:
+            # Validate URL format
+            if not webhook_url.startswith(('http://', 'https://')):
+                raise HTTPException(status_code=400, detail="Webhook URL must start with http:// or https://")
+
+            webhook_configs[email] = webhook_url
+            return {"status": "success", "message": f"Webhook configured for {email}"}
+        else:
+            # Remove webhook if URL is empty
+            if email in webhook_configs:
+                del webhook_configs[email]
+            return {"status": "success", "message": f"Webhook removed for {email}"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/webhook/status/{email}")
+async def get_webhook_status(email: str):
+    """Get webhook configuration status for an email"""
+    webhook_url = webhook_configs.get(email)
+    return {
+        "email": email,
+        "webhook_configured": webhook_url is not None,
+        "webhook_url": webhook_url
+    }
 
 @app.get("/healthz")
 def health_check():
@@ -309,13 +400,15 @@ async def create_new_account(request: Request):
 
 @app.get("/messages")
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
-async def fetch_messages(token: str):
+async def fetch_messages(token: str, email: str = None):
     try:
         messages = get_messages(token)
         full_messages = []
+        new_messages = []
+
         for msg in messages:
             full_msg = get_full_message(token, msg['id'])
-            full_messages.append({
+            message_data = {
                 "id": full_msg["id"],
                 "from": full_msg["from"]["address"],
                 "subject": full_msg["subject"],
@@ -323,7 +416,18 @@ async def fetch_messages(token: str):
                 "html": full_msg.get("html", []),
                 "date": full_msg["createdAt"],
                 "hasAttachments": len(full_msg.get("attachments", [])) > 0
-            })
+            }
+            full_messages.append(message_data)
+
+            # Check if this is a new message for webhook
+            if email and message_data["id"] not in sent_webhook_messages:
+                new_messages.append(message_data)
+                sent_webhook_messages.add(message_data["id"])
+
+        # Trigger webhooks for new messages
+        if new_messages:
+            trigger_webhooks(email, new_messages)
+
         return {"messages": full_messages}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

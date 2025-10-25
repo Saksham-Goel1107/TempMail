@@ -200,6 +200,7 @@ let token = null;
       // Initialize app
       loadDomains();
       loadSavedEmail();
+      loadSavedWebhook();
 
       // Event Listeners
       document
@@ -261,6 +262,56 @@ let token = null;
           showSuccess("🗑️ Email persistence disabled - saved email cleared");
         }
       });
+
+      // Webhook configuration handler
+      document.getElementById("configure-webhook-btn").addEventListener("click", async () => {
+        const webhookUrl = document.getElementById("webhook-url").value.trim();
+
+        if (!email) {
+          showError("❌ Please create an email address first");
+          return;
+        }
+
+        try {
+          const response = await fetch("/webhook/configure", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              email: email,
+              webhook_url: webhookUrl
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            if (webhookUrl) {
+              showSuccess("🔗 Webhook configured successfully!");
+              localStorage.setItem(`webhook_${email}`, webhookUrl);
+            } else {
+              showSuccess("🔗 Webhook removed successfully!");
+              localStorage.removeItem(`webhook_${email}`);
+            }
+          } else {
+            showError(`❌ ${data.detail || "Failed to configure webhook"}`);
+          }
+        } catch (error) {
+          showError("❌ Failed to configure webhook");
+          console.error("Webhook configuration error:", error);
+        }
+      });
+
+      // Load saved webhook URL when email is restored
+      function loadSavedWebhook() {
+        if (email) {
+          const savedWebhook = localStorage.getItem(`webhook_${email}`);
+          if (savedWebhook) {
+            document.getElementById("webhook-url").value = savedWebhook;
+          }
+        }
+      }
 
       // Confirmation modal handlers
       document
@@ -398,9 +449,15 @@ let token = null;
           document.getElementById("email-display").textContent = email;
           document.getElementById("copy-icon-btn").style.display = "flex";
           document.getElementById("qr-btn").style.display = "flex";
+
+          // Load saved webhook for new email
+          loadSavedWebhook();
           btn.disabled = false;
 
           showSuccess("✨ Email created successfully!");
+
+          // Load saved webhook for the new email
+          loadSavedWebhook();
 
           // Start polling for messages
           if (pollingInterval) clearInterval(pollingInterval);
@@ -498,7 +555,7 @@ let token = null;
 
         try {
           const response = await fetch(
-            `/messages?token=${encodeURIComponent(token)}`
+            `/messages?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`
           );
           if (!response.ok) throw new Error("Failed to fetch messages");
 
