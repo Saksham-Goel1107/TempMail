@@ -8,11 +8,12 @@ import random
 import time
 import hashlib
 import uuid
+import re
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 app = FastAPI()
 
-BASE_URL = "https://api.mail.tm"
+BASE_URL = "https://api.mail.gw"
 
 @app.get("/")
 async def read_root():
@@ -73,6 +74,16 @@ async def tempmail_favicon_logo():
 def health_check():
     return {"status": "ok"}
 
+@app.get("/domains")
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
+async def get_available_domains():
+    try:
+        domains_data = get_domains()
+        domains = [member["domain"] for member in domains_data["hydra:member"]]
+        return {"domains": domains}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):
     return HTMLResponse(
@@ -111,9 +122,22 @@ async def not_found_handler(request: Request, exc):
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 def get_domains():
-    response = requests.get(f"{BASE_URL}/domains")
-    response.raise_for_status()
-    return response.json()
+    page = 1
+    domains = []
+    
+    while True:
+        response = requests.get(f"{BASE_URL}/domains?page={page}")
+        response.raise_for_status()
+        data = response.json()
+        domains.extend(member["domain"] for member in data["hydra:member"])
+        
+        # if no next page, stop
+        view = data.get("hydra:view", {})
+        if "hydra:next" not in view:
+            break
+        page += 1
+    
+    return {"hydra:member": [{"domain": domain} for domain in domains]}
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 def create_account(email, password):
@@ -213,27 +237,72 @@ def generate_unique_username():
 
 @app.post("/create_account")
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
-async def create_new_account():
+async def create_new_account(request: Request):
     try:
-        domains = get_domains()
-        domain = domains["hydra:member"][0]['domain']
+        body = await request.json()
+        selected_domain = body.get("domain")
+        custom_username = body.get("username", "").strip()
         
-        # Generate unique, good-looking username
-        username = generate_unique_username()
-        email = f'{username}@{domain}'
+        if not selected_domain:
+            # If no domain selected, get all domains and pick first one as default
+            domains_data = get_domains()
+            selected_domain = domains_data["hydra:member"][0]['domain']
         
-        # Generate secure password with high entropy
-        password_uuid = str(uuid.uuid4())
-        password_timestamp = str(int(time.time() * 1000000))
-        password = hashlib.sha256(f"{password_uuid}{password_timestamp}".encode()).hexdigest()[:32]
+        max_attempts = 10  # Maximum attempts to find unique email
+        attempt = 0
         
-        account_resp = create_account(email, password)
-        if account_resp.status_code != 201:
-            raise HTTPException(status_code=500, detail="Failed to create account")
+        while attempt < max_attempts:
+            attempt += 1
+            
+            # Generate username
+            if custom_username:
+                # For custom username, only try once - if it fails, it's because it already exists
+                if attempt > 1:
+                    raise HTTPException(status_code=400, detail="Username already taken. Please choose a different username.")
+                username = custom_username
+            else:
+                # Generate unique, good-looking username
+                username = generate_unique_username()
+            
+            email = f'{username}@{selected_domain}'
+            
+            # Generate secure password with high entropy
+            password_uuid = str(uuid.uuid4())
+            password_timestamp = str(int(time.time() * 1000000))
+            password = hashlib.sha256(f"{password_uuid}{password_timestamp}".encode()).hexdigest()[:32]
+            
+            try:
+                account_resp = create_account(email, password)
+                if account_resp.status_code == 201:
+                    # Success! Account created
+                    break
+                elif account_resp.status_code == 400:
+                    # Bad request - likely email already exists
+                    if custom_username:
+                        raise HTTPException(status_code=400, detail="Username already taken. Please choose a different username.")
+                    else:
+                        # For auto-generated, try again with new username
+                        continue
+                else:
+                    raise HTTPException(status_code=500, detail=f"Failed to create account: {account_resp.status_code}")
+            except Exception as e:
+                if "already exists" in str(e).lower() or "duplicate" in str(e).lower():
+                    if custom_username:
+                        raise HTTPException(status_code=400, detail="Username already taken. Please choose a different username.")
+                    else:
+                        # Try again with new username
+                        continue
+                else:
+                    raise e
+        
+        if attempt >= max_attempts:
+            raise HTTPException(status_code=500, detail="Failed to generate unique email after multiple attempts")
         
         token = get_token(email, password)
         
         return {"email": email, "token": token}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

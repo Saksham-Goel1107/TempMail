@@ -49,7 +49,7 @@
     <!-- DNS prefetch -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
-    <link rel="dns-prefetch" href="//api.mail.tm" />
+    <link rel="dns-prefetch" href="//api.mail.gw" />
 
     <title>TempMail - Professional Temporary Email Service</title>
     <link
@@ -901,6 +901,123 @@
         transform: translateY(0);
       }
 
+      .domain-selector {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .domain-selector label {
+        font-weight: 500;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .domain-dropdown {
+        padding: 8px 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: var(--light);
+        color: var(--text);
+        font-size: 14px;
+        cursor: pointer;
+        min-width: 200px;
+        transition: border-color 0.2s;
+      }
+
+      .domain-dropdown:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .email-options {
+        margin-bottom: 20px;
+        padding: 16px;
+        background: rgba(99, 102, 241, 0.03);
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      .option-row {
+        margin-bottom: 12px;
+      }
+
+      .option-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .toggle-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+      }
+
+      .toggle-slider {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        background: var(--border);
+        border-radius: 24px;
+        transition: background-color 0.3s;
+      }
+
+      .toggle-slider:before {
+        content: "";
+        position: absolute;
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.3s;
+      }
+
+      input[type="checkbox"]:checked + .toggle-slider {
+        background: var(--primary);
+      }
+
+      input[type="checkbox"]:checked + .toggle-slider:before {
+        transform: translateX(20px);
+      }
+
+      input[type="checkbox"] {
+        display: none;
+      }
+
+      .toggle-text {
+        flex: 1;
+      }
+
+      .username-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: var(--light);
+        color: var(--text);
+        font-size: 14px;
+        margin-top: 4px;
+        transition: border-color 0.2s;
+      }
+
+      .username-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .input-help {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
       .email-info {
         background: rgba(99, 102, 241, 0.05);
         border-left: 4px solid var(--primary);
@@ -1079,67 +1196,118 @@
       .message-row {
         padding: 20px 24px;
         display: grid;
-        grid-template-columns: 2fr 3fr auto;
-        gap: 20px;
+        grid-template-columns: 40px 1fr auto 30px;
+        gap: 16px;
+        align-items: flex-start;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .message-row:hover {
+        background: var(--light);
+      }
+
+      [data-theme="dark"] .message-row:hover {
+        background: rgba(30, 41, 59, 0.4);
+      }
+
+      .message-arrow {
+        display: flex;
         align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: var(--primary);
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+
+      .message-row:hover .message-arrow {
+        opacity: 1;
+      }
+
+      .message-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .message-content {
+        flex: 1;
+        min-width: 0;
       }
 
       .message-sender {
         font-weight: 600;
         color: var(--text);
+        font-size: 15px;
+        margin-bottom: 4px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .message-badge {
-        background: linear-gradient(135deg, var(--secondary), #059669);
-        color: white;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
       }
 
       .message-subject {
-        color: var(--text-muted);
+        color: var(--text);
+        font-weight: 500;
+        margin-bottom: 4px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      .message-date {
-        font-size: 13px;
+      .message-preview {
         color: var(--text-muted);
-        text-align: right;
+        font-size: 14px;
+        line-height: 1.4;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+      }
+
+      .message-time {
+        font-size: 12px;
+        color: var(--text-muted);
         white-space: nowrap;
+        text-align: right;
       }
 
       .empty-inbox {
         text-align: center;
         padding: 80px 20px;
-      }
-
-      .empty-inbox-icon {
-        font-size: 72px;
-        margin-bottom: 20px;
-        opacity: 0.3;
-      }
-
-      .empty-inbox-text {
-        font-size: 18px;
         color: var(--text-muted);
-        font-weight: 500;
       }
 
-      .empty-inbox-subtext {
-        font-size: 14px;
-        color: var(--text-muted);
-        margin-top: 8px;
+      .empty-inbox span {
+        font-size: 96px;
+        display: block;
+        margin-bottom: 24px;
+        opacity: 0.6;
+      }
+
+      .empty-inbox h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+
+      .empty-inbox p {
+        font-size: 16px;
+        line-height: 1.6;
+        max-width: 400px;
+        margin: 0 auto;
       }
 
       .loading {
@@ -1195,24 +1363,12 @@
       .message-item {
         position: relative;
         overflow: hidden;
+        border-bottom: 1px solid var(--border);
+        transition: all 0.2s;
       }
 
-      .message-item::after {
-        content: "→";
-        position: absolute;
-        right: 24px;
-        top: 50%;
-        transform: translateY(-50%) translateX(-10px);
-        opacity: 0;
-        font-size: 24px;
-        color: var(--primary);
-        transition: all 0.3s;
-        font-weight: bold;
-      }
-
-      .message-item:hover::after {
-        opacity: 1;
-        transform: translateY(-50%) translateX(0);
+      .message-item:last-child {
+        border-bottom: none;
       }
 
       /* Enhanced button interactions */
@@ -1559,11 +1715,153 @@
         font-weight: 500;
       }
 
+      /* Saved Emails Section */
+      .saved-emails-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px var(--shadow-lg);
+        animation: slideIn 0.5s ease-out 0.2s backwards;
+        margin-bottom: 24px;
+      }
+
+      [data-theme="dark"] .saved-emails-card {
+        background: var(--dark-light);
+      }
+
+      .saved-emails-header {
+        background: var(--dark);
+        color: white;
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .saved-emails-title {
+        font-size: 20px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .saved-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+      }
+
+      .saved-emails-list {
+        min-height: 100px;
+      }
+
+      .saved-email-item {
+        border-bottom: 1px solid var(--border);
+        transition: all 0.2s;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .saved-email-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: #10b981;
+        transform: scaleY(0);
+        transition: transform 0.2s;
+      }
+
+      .saved-email-item:hover::before {
+        transform: scaleY(1);
+      }
+
+      .saved-email-item:last-child {
+        border-bottom: none;
+      }
+
+      .saved-email-item:hover {
+        background: var(--light);
+        transform: translateX(4px);
+      }
+
+      [data-theme="dark"] .saved-email-item:hover {
+        background: rgba(30, 41, 59, 0.6);
+      }
+
+      .saved-email-row {
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .saved-email-info {
+        flex: 1;
+      }
+
+      .saved-email-address {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+
+      .saved-email-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .saved-email-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .saved-email-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--light);
+        color: var(--text);
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .saved-email-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .no-saved-message {
+        padding: 40px 24px;
+        text-align: center;
+        color: var(--text-muted);
+      }
+
+      .no-saved-message span {
+        font-size: 48px;
+        display: block;
+        margin-bottom: 16px;
+      }
+
+      .btn-sm {
+        padding: 8px 16px;
+        font-size: 14px;
+        min-width: auto;
+      }
+
       /* Stats Section */
       .stats-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 16px;
+        margin-top: 40px;
         margin-bottom: 32px;
       }
 
@@ -2212,6 +2510,29 @@
             </div>
           </div>
 
+          <div class="domain-selector">
+            <label for="domain-select">Choose Domain:</label>
+            <select id="domain-select" class="domain-dropdown">
+              <option value="">Loading domains...</option>
+            </select>
+          </div>
+
+          <div class="email-options">
+            <div class="option-row">
+              <label class="toggle-label">
+                <input type="checkbox" id="persist-toggle">
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">Remember this email across browser sessions</span>
+              </label>
+            </div>
+            
+            <div class="option-row">
+              <label for="custom-username">Custom Username (optional):</label>
+              <input type="text" id="custom-username" class="username-input" placeholder="Leave empty for random username" maxlength="50">
+              <small class="input-help">Only letters, numbers, dots, and underscores allowed</small>
+            </div>
+          </div>
+
           <div class="email-info">
             <strong>🔒 Privacy First:</strong> Your temporary email protects you
             from spam, advertising mailings, and potential security threats.
@@ -2844,6 +3165,167 @@
       let confirmCallback = null;
       let previousMessageCount = 0;
       const originalTitle = document.title;
+      let currentMessages = [];
+      let emailRestored = false;
+
+      // Load available domains
+      async function loadDomains() {
+        try {
+          const response = await fetch("/domains");
+          if (!response.ok) throw new Error("Failed to load domains");
+          
+          const data = await response.json();
+          const domainSelect = document.getElementById("domain-select");
+          domainSelect.innerHTML = "";
+          
+          data.domains.forEach(domain => {
+            const option = document.createElement("option");
+            option.value = domain;
+            option.textContent = `@${domain}`;
+            domainSelect.appendChild(option);
+          });
+          
+          // Select first domain by default
+          if (data.domains.length > 0) {
+            domainSelect.value = data.domains[0];
+          }
+        } catch (error) {
+          console.error("Error loading domains:", error);
+          const domainSelect = document.getElementById("domain-select");
+          domainSelect.innerHTML = '<option value="">Failed to load domains</option>';
+        }
+      }
+
+      // Load saved email from localStorage
+      function loadSavedEmail() {
+        try {
+          const saved = localStorage.getItem("savedEmail");
+          const savedPersistence = localStorage.getItem("emailPersistence") === "true";
+          
+          // Restore toggle state
+          const persistToggle = document.getElementById("persist-toggle");
+          persistToggle.checked = savedPersistence;
+          
+          if (saved && savedPersistence) {
+            const savedData = JSON.parse(saved);
+            
+            email = savedData.email;
+            token = savedData.token;
+            currentMessages = savedData.messages || [];
+            
+            document.getElementById("email-display").textContent = email;
+            document.getElementById("copy-icon-btn").style.display = "flex";
+            document.getElementById("qr-btn").style.display = "flex";
+            
+            showSuccess("✨ Previous email restored!");
+            
+            // Update messages display
+            updateMessagesDisplay();
+            
+            // Start polling
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(fetchMessages, 10000);
+            document.getElementById("auto-refresh-indicator").style.display = "flex";
+            
+            emailRestored = true;
+            return true; // Email was restored
+          }
+        } catch (error) {
+          console.error("Error loading saved email:", error);
+        }
+        return false; // No email restored
+      }
+
+      // Save current email to localStorage
+      function saveCurrentEmail() {
+        if (!email || !token) return;
+        
+        try {
+          const emailData = {
+            email: email,
+            token: token,
+            messages: currentMessages,
+            savedAt: new Date().toISOString()
+          };
+          localStorage.setItem("savedEmail", JSON.stringify(emailData));
+        } catch (error) {
+          console.error("Error saving email:", error);
+        }
+      }
+
+      // Clear saved email
+      function clearSavedEmail() {
+        try {
+          localStorage.removeItem("savedEmail");
+        } catch (error) {
+          console.error("Error clearing saved email:", error);
+        }
+      }
+
+      // Update messages display
+      function updateMessagesDisplay() {
+        const messagesContainer = document.getElementById("messages");
+        const inboxCount = document.getElementById("inbox-count");
+
+        if (currentMessages.length === 0) {
+          messagesContainer.innerHTML = `
+            <div class="empty-inbox">
+              <span>📭</span>
+              <h3>No messages yet</h3>
+              <p>Your inbox is empty. Share your email address to start receiving messages!</p>
+            </div>
+          `;
+          inboxCount.textContent = "0";
+          return;
+        }
+
+        inboxCount.textContent = currentMessages.length;
+
+        messagesContainer.innerHTML = currentMessages.map((msg, index) => `
+          <div class="message-item" data-index="${index}">
+            <div class="message-row">
+              <div class="message-icon">✉️</div>
+              <div class="message-content">
+                <div class="message-sender">${msg.from}</div>
+                <div class="message-subject">${msg.subject || "No subject"}</div>
+                <div class="message-preview">${(msg.text || "").substring(0, 120)}${(msg.text || "").length > 120 ? "..." : ""}</div>
+              </div>
+              <div class="message-time">
+                ${new Date(msg.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </div>
+              <div class="message-arrow">→</div>
+            </div>
+          </div>
+        `).join("");
+
+        // Add click handlers for message items
+        document.querySelectorAll(".message-item").forEach((item, index) => {
+          item.addEventListener("click", () => {
+            showMessageDetail(currentMessages[index]);
+          });
+        });
+      }
+
+      // Validate custom username
+      function validateUsername(username) {
+        if (!username) return { valid: true }; // Empty is allowed (random username)
+
+        // Only allow letters, numbers, dots, and underscores
+        const usernameRegex = /^[a-zA-Z0-9._]+$/;
+        if (!usernameRegex.test(username)) {
+          return { valid: false, error: "Username can only contain letters, numbers, dots, and underscores" };
+        }
+
+        if (username.length < 3) {
+          return { valid: false, error: "Username must be at least 3 characters long" };
+        }
+
+        if (username.length > 50) {
+          return { valid: false, error: "Username must be less than 50 characters long" };
+        }
+
+        return { valid: true };
+      }
 
       // Dark mode initialization
       const initTheme = () => {
@@ -2874,6 +3356,10 @@
 
       // Initialize theme on load
       initTheme();
+
+      // Initialize app
+      loadDomains();
+      loadSavedEmail();
 
       // Event Listeners
       document
@@ -2913,6 +3399,28 @@
       document
         .getElementById("close-message-modal")
         .addEventListener("click", closeMessageModal);
+
+      // Persistence toggle handler
+      document.getElementById("persist-toggle").addEventListener("change", (e) => {
+        const isEnabled = e.target.checked;
+        
+        // Save toggle state
+        localStorage.setItem("emailPersistence", isEnabled.toString());
+        
+        if (isEnabled) {
+          // Save current email if one exists
+          if (email && token) {
+            saveCurrentEmail();
+            showSuccess("💾 Email persistence enabled - your email will be remembered");
+          } else {
+            showSuccess("💾 Email persistence enabled");
+          }
+        } else {
+          // Clear saved email
+          clearSavedEmail();
+          showSuccess("🗑️ Email persistence disabled - saved email cleared");
+        }
+      });
 
       // Confirmation modal handlers
       document
@@ -2988,12 +3496,64 @@
           const btn = document.getElementById("change-btn");
           btn.disabled = true;
 
-          const response = await fetch("/create_account", { method: "POST" });
-          if (!response.ok) throw new Error("Failed to create account");
+          const domainSelect = document.getElementById("domain-select");
+          const selectedDomain = domainSelect.value;
+
+          const customUsernameInput = document.getElementById("custom-username");
+          const customUsername = customUsernameInput.value.trim();
+
+          // Validate custom username
+          const validation = validateUsername(customUsername);
+          if (!validation.valid) {
+            showError(`❌ ${validation.error}`);
+            btn.disabled = false;
+            return;
+          }
+
+          const persistToggle = document.getElementById("persist-toggle");
+          const shouldPersist = persistToggle.checked;
+
+          // If creating new email and persistence is disabled, clear any saved email
+          if (!shouldPersist) {
+            clearSavedEmail();
+          }
+
+          const requestBody = { domain: selectedDomain };
+          if (customUsername) {
+            requestBody.username = customUsername;
+          }
+
+          const response = await fetch("/create_account", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            if (response.status === 400 && errorData.detail && errorData.detail.includes("Username already taken")) {
+              throw new Error("Username already taken. Please choose a different username.");
+            } else {
+              throw new Error(errorData.detail || "Failed to create account");
+            }
+          }
 
           const data = await response.json();
           email = data.email;
           token = data.token;
+          currentMessages = []; // Reset messages for new email
+
+          // Save the new email instantly if persistence is enabled
+          if (shouldPersist) {
+            saveCurrentEmail();
+          }
+
+          // Save the new email instantly if persistence is enabled
+          if (shouldPersist) {
+            saveCurrentEmail();
+          }
 
           document.getElementById("email-display").textContent = email;
           document.getElementById("copy-icon-btn").style.display = "flex";
@@ -3005,8 +3565,7 @@
           // Start polling for messages
           if (pollingInterval) clearInterval(pollingInterval);
           pollingInterval = setInterval(fetchMessages, 10000);
-          document.getElementById("auto-refresh-indicator").style.display =
-            "flex";
+          document.getElementById("auto-refresh-indicator").style.display = "flex";
           fetchMessages();
         } catch (error) {
           showError(`❌ Error: ${error.message}`);
@@ -3104,11 +3663,18 @@
           if (!response.ok) throw new Error("Failed to fetch messages");
 
           const data = await response.json();
+          currentMessages = data.messages; // Store messages
           const currentCount = data.messages.length;
 
-          displayMessages(data.messages);
+          updateMessagesDisplay();
           document.getElementById("inbox-count").textContent = currentCount;
           document.getElementById("stat-emails").textContent = currentCount;
+
+          // Auto-save if persistence is enabled
+          const persistToggle = document.getElementById("persist-toggle");
+          if (persistToggle.checked && email && token) {
+            saveCurrentEmail();
+          }
 
           // Update page title for new messages
           if (currentCount > previousMessageCount && previousMessageCount > 0) {
@@ -3537,9 +4103,12 @@
         }
       });
 
-      // Auto-create email on page load
+      // Auto-create email on page load only if no email was restored
       window.addEventListener("load", () => {
-        createAccount();
+        if (!emailRestored) {
+          // Only create account if no email was restored from localStorage
+          createAccount();
+        }
         initNavigation();
         initBackToTop();
         initCookieConsent();
@@ -3720,6 +4289,9 @@
 
       // Initialize accessibility features
       initAccessibility();
+
+      // Load domains on page load
+      loadDomains();
     </script>
   </body>
 </html>
