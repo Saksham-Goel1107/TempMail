@@ -55,6 +55,7 @@ let token = null;
             
             document.getElementById("email-display").textContent = email;
             document.getElementById("copy-icon-btn").style.display = "flex";
+            document.getElementById("share-email-btn").style.display = "flex";
             document.getElementById("qr-btn").style.display = "flex";
             
             showSuccess("✨ Previous email restored!");
@@ -237,6 +238,9 @@ let token = null;
       document
         .getElementById("close-qr-modal")
         .addEventListener("click", closeQRModal);
+      document.getElementById("share-qr-btn").addEventListener("click", shareQRCode);
+      document.getElementById("download-qr-btn").addEventListener("click", downloadQRCode);
+      document.getElementById("share-email-btn").addEventListener("click", shareEmail);
       document
         .getElementById("close-message-modal")
         .addEventListener("click", closeMessageModal);
@@ -448,6 +452,7 @@ let token = null;
 
           document.getElementById("email-display").textContent = email;
           document.getElementById("copy-icon-btn").style.display = "flex";
+          document.getElementById("share-email-btn").style.display = "flex";
           document.getElementById("qr-btn").style.display = "flex";
 
           // Load saved webhook for new email
@@ -880,14 +885,18 @@ let token = null;
         // Clear previous QR code
         qrcodeDiv.innerHTML = "";
 
-        // Generate new QR code
+        // Generate new QR code with responsive size
         try {
+          const isMobile = window.innerWidth <= 480;
+          const qrSize = isMobile ? 180 : 220;
+          const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+
           new QRCode(qrcodeDiv, {
             text: email,
-            width: 220,
-            height: 220,
-            colorDark: "#1e293b",
-            colorLight: "#ffffff",
+            width: qrSize,
+            height: qrSize,
+            colorDark: isDark ? "#ffffff" : "#1e293b",
+            colorLight: isDark ? "#1e293b" : "#ffffff",
             correctLevel: QRCode.CorrectLevel.H,
           });
 
@@ -900,6 +909,106 @@ let token = null;
 
       function closeQRModal() {
         document.getElementById("qr-modal").classList.remove("active");
+      }
+
+      async function shareQRCode() {
+        if (!email) return;
+
+        const qrcodeDiv = document.getElementById("qrcode");
+        const qrCanvas = qrcodeDiv.querySelector("canvas");
+
+        if (!qrCanvas) {
+          showError("❌ QR code not found");
+          return;
+        }
+
+        try {
+          // Convert canvas to blob
+          qrCanvas.toBlob(async (blob) => {
+            if (!blob) {
+              showError("❌ Failed to create QR code image");
+              return;
+            }
+
+            const file = new File([blob], "temp-mail-qr.png", { type: "image/png" });
+
+            if (navigator.share && navigator.canShare({ files: [file] })) {
+              // Use Web Share API if available
+              await navigator.share({
+                title: "TempMail QR Code",
+                text: `Scan this QR code to access: ${email}`,
+                files: [file]
+              });
+            } else {
+              // Fallback: copy to clipboard or show message
+              showSuccess("📋 QR code image created! Use download button to save.");
+            }
+          });
+        } catch (error) {
+          showError("❌ Failed to share QR code");
+          console.error("Share QR error:", error);
+        }
+      }
+
+      async function downloadQRCode() {
+        if (!email) return;
+
+        const qrcodeDiv = document.getElementById("qrcode");
+        const qrCanvas = qrcodeDiv.querySelector("canvas");
+
+        if (!qrCanvas) {
+          showError("❌ QR code not found");
+          return;
+        }
+
+        try {
+          // Create download link
+          const link = document.createElement("a");
+          link.download = `temp-mail-${email.replace("@", "-")}.png`;
+          link.href = qrCanvas.toDataURL("image/png");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          showSuccess("💾 QR code downloaded successfully!");
+        } catch (error) {
+          showError("❌ Failed to download QR code");
+          console.error("Download QR error:", error);
+        }
+      }
+
+      async function shareEmail() {
+        if (!email) {
+          showError("⚠️ Please create an email first");
+          return;
+        }
+
+        const shareData = {
+          title: "TempMail - Temporary Email",
+          text: `My temporary email address: ${email}`,
+        };
+
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+            showSuccess("📤 Email shared successfully!");
+          } else {
+            // Fallback: copy to clipboard
+            await navigator.clipboard.writeText(email);
+            showSuccess("📋 Email copied to clipboard!");
+          }
+        } catch (error) {
+          if (error.name !== "AbortError") {
+            // Fallback: copy to clipboard
+            try {
+              await navigator.clipboard.writeText(email);
+              showSuccess("📋 Email copied to clipboard!");
+            } catch (clipboardError) {
+              showError("❌ Failed to share email");
+              console.error("Share email error:", error);
+            }
+          }
+        }
       }
 
       function formatDate(dateString) {

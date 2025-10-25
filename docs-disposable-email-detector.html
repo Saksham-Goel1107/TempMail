@@ -50,6 +50,11 @@
             <span>←</span>
             <span>Back to Home</span>
           </a>
+          <select class="ai-dropdown" id="ai-dropdown" title="Ask AI about this page">
+            <option value="">🤖 Ask AI</option>
+            <option value="claude">🟡 Open in Claude</option>
+            <option value="chatgpt">🟢 Open in ChatGPT</option>
+          </select>
           <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
             🌙
           </button>
@@ -206,7 +211,7 @@
               </tr>
               <tr>
                 <td>400</td>
-                <td>Bad Request - Missing or invalid email parameter</td>
+                <td>Bad Request - Missing email parameter, invalid email format, or domain has no mail server</td>
               </tr>
               <tr>
                 <td>429</td>
@@ -218,6 +223,26 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Error Response Examples</h4>
+
+          <h5>Missing Email Parameter (400)</h5>
+          <div class="response-example">{
+  "error": "Email parameter is required",
+  "tempmail": null
+}</div>
+
+          <h5>Invalid Email Format (400)</h5>
+          <div class="response-example">{
+  "error": "Invalid email format",
+  "tempmail": null
+}</div>
+
+          <h5>Email Domain Has No Mail Server (400)</h5>
+          <div class="response-example">{
+  "error": "Email domain has no mail server",
+  "tempmail": null
+}</div>
 
           <h4>Example Usage</h4>
           <pre class="language-javascript line-numbers"><code class="language-javascript">// Using fetch API
@@ -549,6 +574,28 @@ Content-Type: application/json
 
       // Initialize copy buttons after Prism highlighting
       setTimeout(addCopyButtons, 100);
+
+      // AI Dropdown functionality
+      const aiDropdown = document.getElementById('ai-dropdown');
+      aiDropdown.addEventListener('change', (e) => {
+        const selectedValue = e.target.value;
+        const currentUrl = encodeURIComponent(window.location.href);
+
+        if (selectedValue === 'claude') {
+          // Open in Claude with the page content
+          const claudeUrl = `https://claude.ai/new?q=Please%20analyze%20and%20help%20me%20understand%20this%20API%20documentation:%20${currentUrl}`;
+          window.open(claudeUrl, '_blank');
+        } else if (selectedValue === 'chatgpt') {
+          // Open in ChatGPT with the page content
+          const chatgptUrl = `https://chat.openai.com/?q=Please%20analyze%20this%20API%20documentation%20and%20help%20me%20understand%20it:%20${currentUrl}`;
+          window.open(chatgptUrl, '_blank');
+        }
+
+        // Reset dropdown to default option
+        setTimeout(() => {
+          aiDropdown.value = '';
+        }, 100);
+      });
     </script>
     <script src="scripts/google-translate.js"></script>
   </body>
