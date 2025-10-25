@@ -3,15 +3,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.staticfiles import StaticFiles
 import requests
 import random
 import time
 import hashlib
 import uuid
-import re
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 app = FastAPI()
+
+# Mount static directories
+app.mount("/styles", StaticFiles(directory="styles"), name="styles")
+app.mount("/scripts", StaticFiles(directory="scripts"), name="scripts")
 
 BASE_URL = "https://api.mail.gw"
 
