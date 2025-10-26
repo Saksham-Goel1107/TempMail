@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 import random
 import time
@@ -11,6 +12,15 @@ import asyncio
 import aiohttp
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Mount static directories
 app.mount("/styles", StaticFiles(directory="styles"), name="styles")
@@ -331,7 +341,10 @@ def generate_unique_username():
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 async def create_new_account(request: Request):
     try:
-        body = await request.json()
+        try:
+            body = await request.json()
+        except:
+            body = {}
         selected_domain = body.get("domain")
         custom_username = body.get("username", "").strip()
         

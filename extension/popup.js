@@ -26,11 +26,17 @@ const confirmationTitle = document.getElementById('confirmationTitle');
 const confirmationMessage = document.getElementById('confirmationMessage');
 const confirmOk = document.getElementById('confirmOk');
 const confirmCancel = document.getElementById('confirmCancel');
+const themeToggle = document.getElementById('themeToggle');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+  // Load saved theme preference
+  const themeData = await chrome.storage.local.get(['theme']);
+  const savedTheme = themeData.theme || 'light';
+  setTheme(savedTheme);
+
   // Load saved email and token from storage
   const data = await chrome.storage.local.get(['email', 'token', 'messages']);
   
@@ -59,6 +65,7 @@ function setupEventListeners() {
   messageSearch.addEventListener('input', handleSearch);
   confirmOk.addEventListener('click', handleConfirmOk);
   confirmCancel.addEventListener('click', hideConfirmationModal);
+  themeToggle.addEventListener('change', toggleTheme);
   
   // Close modal when clicking on backdrop
   confirmationModal.addEventListener('click', (e) => {
@@ -502,4 +509,18 @@ function handleLinkClick(event) {
     'Open External Link',
     `This link takes you to another website.<br><span class="link-url">${url}</span><br>Do you want to open it in a new tab?`
   );
+}
+
+// Theme management functions
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  themeToggle.checked = theme === 'dark';
+}
+
+function toggleTheme() {
+  const newTheme = themeToggle.checked ? 'dark' : 'light';
+  setTheme(newTheme);
+  
+  // Save theme preference
+  chrome.storage.local.set({ theme: newTheme });
 }
